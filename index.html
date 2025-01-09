@@ -5,48 +5,50 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Välkommen till Lindbäcksstadion!</title>
     <style>
-        /* Anpassning för 16:9 och en vänlig layout */
+        /* Anpassning för layout och 16:9-format */
         body {
             margin: 0;
             padding: 0;
             height: 100vh;
             width: 100vw;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
+            justify-content: space-between;
             align-items: center;
             background: linear-gradient(to bottom, #87CEEB, #f0f8ff); /* Himmel till snö */
             font-family: 'Arial', sans-serif;
+            color: #2F4F4F; /* Kontrastfärg */
             text-align: center;
-            color: #2F4F4F; /* Mörkare ton för kontrast */
         }
 
-        .container {
-            width: 1920px;
-            height: 1080px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
-
-        h1 {
-            font-size: 4rem;
-            margin-bottom: 20px;
+        .header {
+            margin-top: 20px;
+            font-size: 5rem; /* Stor rubrik */
+            font-weight: bold;
             color: #ffffff;
-            text-shadow: 2px 2px 4px #000000;
+            text-shadow: 3px 3px 6px #000000; /* Rubrik med skuggeffekt */
         }
 
         .temperature {
-            font-size: 5rem;
+            flex: 1; /* Använd 50% av höjden */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 15rem; /* Stor temperaturvisning */
             font-weight: bold;
-            color: #1E90FF;
-            margin-bottom: 20px;
-            text-shadow: 1px 1px 3px #000000;
+            color: #1E90FF; /* Frostig blå */
+            text-shadow: 2px 2px 5px #000000;
+        }
+
+        .error {
+            font-size: 1.8rem;
+            color: #FF6347;
+            margin-top: -30px; /* Flytta upp för att hamna närmare temperaturen */
         }
 
         .source {
             font-size: 1.5rem;
-            margin-top: 20px;
+            margin-bottom: 20px;
             color: #2F4F4F;
         }
 
@@ -59,26 +61,17 @@
         .source a:hover {
             text-decoration: underline;
         }
-
-        .error {
-            color: #FF6347;
-            font-size: 1.8rem;
-            margin-top: 20px;
-        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Välkommen till Lindbäcksstadion!</h1>
-        <a id="temperature-link" href="https://www.temperatur.nu/pitea-lindbacksstadion" target="_blank" class="temperature">
-            Laddar...
-        </a>
-        <div class="source">
-            <p>Temperaturdata från <a href="https://www.temperatur.nu" target="_blank">Temperatur.nu</a>.</p>
-        </div>
-        <div id="error-message" class="error"></div>
+    <div class="header">Välkommen till Lindbäcksstadion!</div>
+    <a id="temperature-link" href="https://www.temperatur.nu/pitea-lindbacksstadion" target="_blank" class="temperature">
+        Laddar...
+    </a>
+    <div id="error-message" class="error"></div>
+    <div class="source">
+        Temperaturdata hämtat från <a href="https://www.temperatur.nu" target="_blank">Temperatur.nu</a>.
     </div>
-
     <script>
         async function fetchTemperature() {
             const errorMessageElement = document.getElementById("error-message");
@@ -87,23 +80,19 @@
             try {
                 const response = await fetch("https://api.temperatur.nu/tnu_1.17.php?p=pitea-lindbacksstadion&verbose");
 
-                // Kontrollera API-respons
                 if (!response.ok) throw new Error(`API-svarade med status: ${response.status}`);
                 
                 const data = await response.json();
                 
-                // Kontrollera om data är giltig
                 if (!data.temperatur || data.temperatur.nu.length === 0) {
                     throw new Error("Ingen temperaturdata hittades.");
                 }
 
-                // Uppdatera temperaturen
                 const temperature = data.temperatur.nu[0].temp + " °C";
                 temperatureLink.textContent = temperature;
                 temperatureLink.href = "https://www.temperatur.nu/pitea-lindbacksstadion";
                 errorMessageElement.textContent = ""; // Rensa eventuella fel
             } catch (error) {
-                // Om något går fel, visa fallback och felmeddelande
                 temperatureLink.textContent = "2.3 °C (exempelvärde)";
                 temperatureLink.href = "https://www.temperatur.nu/pitea-lindbacksstadion";
                 errorMessageElement.textContent = "Kunde inte hämta temperaturen just nu. Försök igen senare.";
@@ -111,10 +100,8 @@
             }
         }
 
-        // Hämta temperaturen vid sidladdning
         fetchTemperature();
 
-        // Uppdatera temperaturen var tredje minut (180000 ms)
         setInterval(fetchTemperature, 180000);
     </script>
 </body>
