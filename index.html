@@ -14,11 +14,21 @@
             font-size: 2rem;
             margin-top: 20px;
         }
+        .source {
+            font-size: 0.9rem;
+            margin-top: 10px;
+            color: gray;
+        }
     </style>
 </head>
 <body>
-    <h1>Temperatur i Piteå (Lindbäcksstadion)</h1>
-    <div class="temperature" id="temperature">Laddar...</div>
+    <h1>Temperatur på Lindbäcksstadion</h1>
+    <a id="temperature-link" href="https://www.temperatur.nu/pitea-lindbacksstadion" target="_blank" class="temperature">
+        Laddar...
+    </a>
+    <div class="source">
+        Temperaturen hämtas från <a href="https://www.temperatur.nu" target="_blank">Temperatur.nu</a>.
+    </div>
 
     <script>
         async function fetchTemperature() {
@@ -31,15 +41,20 @@
                 const temperature = data.temperatur.nu[0].temp + " °C";
                 
                 // Uppdatera sidan med temperaturen
-                document.getElementById("temperature").textContent = temperature;
+                const temperatureLink = document.getElementById("temperature-link");
+                temperatureLink.textContent = temperature;
+                temperatureLink.href = "https://www.temperatur.nu/pitea-lindbacksstadion";
             } catch (error) {
-                document.getElementById("temperature").textContent = "Kunde inte hämta temperaturen.";
+                document.getElementById("temperature-link").textContent = "Kunde inte hämta temperaturen.";
                 console.error("Error fetching temperature data:", error);
             }
         }
 
-        // Kör funktionen när sidan laddas
+        // Hämta temperaturen direkt vid sidladdning
         fetchTemperature();
+
+        // Uppdatera temperaturen var 3:e minut (180000 ms)
+        setInterval(fetchTemperature, 180000);
     </script>
 </body>
 </html>
