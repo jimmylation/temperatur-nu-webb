@@ -1,108 +1,33 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Välkommen till Lindbäcksstadion!</title>
-    <style>
-        /* Anpassning för layout och 16:9-format */
-        body {
-            margin: 0;
-            padding: 0;
-            height: 100vh;
-            width: 100vw;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            align-items: center;
-            background: linear-gradient(to bottom, #87CEEB, #f0f8ff); /* Himmel till snö */
-            font-family: 'Arial', sans-serif;
-            color: #2F4F4F; /* Kontrastfärg */
-            text-align: center;
-        }
+<script>
+    async function fetchTemperature() {
+        const errorMessageElement = document.getElementById("error-message");
+        const temperatureLink = document.getElementById("temperature-link");
 
-        .header {
-            margin-top: 20px;
-            font-size: 5rem; /* Stor rubrik */
-            font-weight: bold;
-            color: #ffffff;
-            text-shadow: 3px 3px 6px #000000; /* Rubrik med skuggeffekt */
-        }
+        try {
+            const response = await fetch("https://api.temperatur.nu/tnu_1.17.php?p=pitea-lindbacksstadion&verbose");
 
-        .temperature {
-            flex: 1; /* Använd 50% av höjden */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 15rem; /* Stor temperaturvisning */
-            font-weight: bold;
-            color: #1E90FF; /* Frostig blå */
-            text-shadow: 2px 2px 5px #000000;
-        }
-
-        .error {
-            font-size: 1.8rem;
-            color: #FF6347;
-            margin-top: -30px; /* Flytta upp för att hamna närmare temperaturen */
-        }
-
-        .source {
-            font-size: 1.5rem;
-            margin-bottom: 20px;
-            color: #2F4F4F;
-        }
-
-        .source a {
-            text-decoration: none;
-            color: #1E90FF;
-            font-weight: bold;
-        }
-
-        .source a:hover {
-            text-decoration: underline;
-        }
-    </style>
-</head>
-<body>
-    <div class="header">Välkommen till Lindbäcksstadion!</div>
-    <a id="temperature-link" href="https://www.temperatur.nu/pitea-lindbacksstadion" target="_blank" class="temperature">
-        Laddar...
-    </a>
-    <div id="error-message" class="error"></div>
-    <div class="source">
-        Temperaturdata hämtat från <a href="https://www.temperatur.nu" target="_blank">Temperatur.nu</a>.
-    </div>
-    <script>
-        async function fetchTemperature() {
-            const errorMessageElement = document.getElementById("error-message");
-            const temperatureLink = document.getElementById("temperature-link");
-
-            try {
-                const response = await fetch("https://api.temperatur.nu/tnu_1.17.php?p=pitea-lindbacksstadion&verbose");
-
-                if (!response.ok) throw new Error(`API-svarade med status: ${response.status}`);
-                
-                const data = await response.json();
-                
-                if (!data.temperatur || data.temperatur.nu.length === 0) {
-                    throw new Error("Ingen temperaturdata hittades.");
-                }
-
-                const temperature = data.temperatur.nu[0].temp + " °C";
-                temperatureLink.textContent = temperature;
-                temperatureLink.href = "https://www.temperatur.nu/pitea-lindbacksstadion";
-                errorMessageElement.textContent = ""; // Rensa eventuella fel
-            } catch (error) {
-                temperatureLink.textContent = "2.3 °C (exempelvärde)";
-                temperatureLink.href = "https://www.temperatur.nu/pitea-lindbacksstadion";
-                errorMessageElement.textContent = "Kunde inte hämta temperaturen just nu. Försök igen senare.";
-                console.error("Error fetching temperature data:", error);
+            if (!response.ok) throw new Error(`API svarade med status: ${response.status}`);
+            
+            const data = await response.json();
+            
+            if (!data.temperatur || data.temperatur.nu.length === 0) {
+                throw new Error("Ingen temperaturdata hittades.");
             }
+
+            const temperature = data.temperatur.nu[0].temp + " °C";
+            temperatureLink.textContent = temperature;
+            temperatureLink.href = "https://www.temperatur.nu/pitea-lindbacksstadion";
+            errorMessageElement.textContent = ""; // Rensa eventuella fel
+        } catch (error) {
+            // Visa endast "x.x" om temperaturen inte kan hämtas
+            temperatureLink.textContent = "x.x";
+            temperatureLink.href = "https://www.temperatur.nu/pitea-lindbacksstadion";
+            errorMessageElement.textContent = "Kunde inte hämta temperaturen just nu. Försök igen senare.";
+            console.error("Error fetching temperature data:", error);
         }
+    }
 
-        fetchTemperature();
+    fetchTemperature();
 
-        setInterval(fetchTemperature, 180000);
-    </script>
-</body>
-</html>
+    setInterval(fetchTemperature, 180000);
+</script>
