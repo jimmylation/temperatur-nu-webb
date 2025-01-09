@@ -38,7 +38,7 @@
         }
 
         .temperature {
-            font-size: 18rem; /* Ännu större temperaturvisning */
+            font-size: 21.6rem; /* Ännu större temperaturvisning (+20%) */
             font-weight: bold;
             text-shadow: 2px 2px 5px #000000;
             margin: 0;
@@ -106,7 +106,7 @@
                 // Visa "x.x°C" om temperaturen inte kan hämtas
                 temperatureLink.textContent = "x.x°C";
                 temperatureLink.href = "https://www.temperatur.nu/pitea-lindbacksstadion";
-                errorMessageElement.textContent = "Kunde inte hämta temperaturen just nu. Försök igen senare.";
+                errorMessageElement.textContent = "Kunde inte hämta temperaturen just nu.";
                 console.error("Error fetching temperature data:", error);
             }
         }
