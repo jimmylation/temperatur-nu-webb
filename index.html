@@ -40,8 +40,14 @@
         .temperature {
             font-size: 21.6rem; /* Ännu större temperaturvisning (+20%) */
             font-weight: bold;
+            color: #4682b4; /* Himmelsblå färg (dark steel blue) */
             text-shadow: 2px 2px 5px #000000;
             margin: 0;
+            text-decoration: none; /* Ingen understrykning */
+        }
+
+        .temperature:hover {
+            color: #5f9ea0; /* Ljusare blå vid hover */
         }
 
         .error {
@@ -88,7 +94,7 @@
             const temperatureLink = document.getElementById("temperature-link");
 
             try {
-                const response = await fetch("https://api.temperatur.nu/tnu_1.17.php?p=pitea-lindbacksstadion&cli=my_custom_client");
+                const response = await fetch("https://api.temperatur.nu/tnu_1.17.php?p=pitea-lindbacksstadion&cli=api_demo");
 
                 if (!response.ok) throw new Error(`API svarade med status: ${response.status}`);
                 
