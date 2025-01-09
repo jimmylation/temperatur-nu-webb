@@ -29,21 +29,26 @@
             text-shadow: 3px 3px 6px #000000; /* Rubrik med skuggeffekt */
         }
 
-        .temperature {
-            flex: 1; /* Använd 50% av höjden */
+        .temperature-container {
+            flex: 1; /* Tar upp centralt utrymme */
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
-            font-size: 15rem; /* Stor temperaturvisning */
+        }
+
+        .temperature {
+            font-size: 18rem; /* Ännu större temperaturvisning */
             font-weight: bold;
             color: #1E90FF; /* Frostig blå */
             text-shadow: 2px 2px 5px #000000;
+            margin: 0;
         }
 
         .error {
-            font-size: 1.8rem;
+            font-size: 2rem;
             color: #FF6347;
-            margin-top: -30px; /* Flytta upp för att hamna närmare temperaturen */
+            margin-top: 10px; /* Flytta upp nära temperaturen */
         }
 
         .source {
@@ -65,10 +70,12 @@
 </head>
 <body>
     <div class="header">Välkommen till Lindbäcksstadion!</div>
-    <a id="temperature-link" href="https://www.temperatur.nu/pitea-lindbacksstadion" target="_blank" class="temperature">
-        Laddar...
-    </a>
-    <div id="error-message" class="error"></div>
+    <div class="temperature-container">
+        <a id="temperature-link" href="https://www.temperatur.nu/pitea-lindbacksstadion" target="_blank" class="temperature">
+            Laddar...
+        </a>
+        <div id="error-message" class="error"></div>
+    </div>
     <div class="source">
         Temperaturdata hämtat från <a href="https://www.temperatur.nu" target="_blank">Temperatur.nu</a>.
     </div>
@@ -93,8 +100,8 @@
                 temperatureLink.href = "https://www.temperatur.nu/pitea-lindbacksstadion";
                 errorMessageElement.textContent = ""; // Rensa eventuella fel
             } catch (error) {
-                // Visa endast "x.x" om temperaturen inte kan hämtas
-                temperatureLink.textContent = "x.x";
+                // Visa "x.x °C" om temperaturen inte kan hämtas
+                temperatureLink.textContent = "x.x °C";
                 temperatureLink.href = "https://www.temperatur.nu/pitea-lindbacksstadion";
                 errorMessageElement.textContent = "Kunde inte hämta temperaturen just nu. Försök igen senare.";
                 console.error("Error fetching temperature data:", error);
@@ -103,7 +110,7 @@
 
         fetchTemperature();
 
-        setInterval(fetchTemperature, 180000);
+        setInterval(fetchTemperature, 180000); // Uppdatera var 3:e minut
     </script>
 </body>
 </html>
