@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Välkommen till Lindbäcksstadion!</title>
     <style>
-        /* Anpassning för layout och 16:9-format */
+        /* Modern layout och stil */
         body {
             margin: 0;
             padding: 0;
@@ -15,18 +15,21 @@
             flex-direction: column;
             justify-content: space-between;
             align-items: center;
-            background: linear-gradient(to bottom, #87CEEB, #f0f8ff); /* Himmel till snö */
-            font-family: 'Arial', sans-serif;
-            color: #2F4F4F; /* Kontrastfärg */
+            background: linear-gradient(to bottom, #8BC6EC, #FFFFFF); /* Mjuk himmel till snö */
+            font-family: 'Roboto', sans-serif;
+            color: #333; /* Neutral textfärg */
             text-align: center;
         }
 
         .header {
             margin-top: 20px;
-            font-size: 5rem; /* Stor rubrik */
-            font-weight: bold;
-            color: #ffffff;
-            text-shadow: 3px 3px 6px #000000; /* Rubrik med skuggeffekt */
+            font-size: 6rem;
+            font-weight: 900;
+            color: #FFFFFF;
+            background: linear-gradient(to right, #4facfe, #00f2fe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.3);
         }
 
         .temperature-container {
@@ -38,23 +41,26 @@
         }
 
         .temperature {
-            font-size: 18rem; /* Ännu större temperaturvisning */
-            font-weight: bold;
-            color: #1E90FF; /* Frostig blå */
-            text-shadow: 2px 2px 5px #000000;
-            margin: 0;
+            font-size: 18rem; /* Storlek på temperaturen */
+            font-weight: 700;
+            color: #ffffff;
+            background: linear-gradient(to right, #1E90FF, #00BFFF);
+            padding: 20px 40px;
+            border-radius: 30px;
+            box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.3);
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
         }
 
         .error {
             font-size: 2rem;
             color: #FF6347;
-            margin-top: 10px; /* Flytta upp nära temperaturen */
+            margin-top: 20px;
         }
 
         .source {
             font-size: 1.5rem;
             margin-bottom: 20px;
-            color: #2F4F4F;
+            color: #333;
         }
 
         .source a {
