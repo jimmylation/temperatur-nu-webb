@@ -3,124 +3,70 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Välkommen till Lindbäcksstadion!</title>
+    <title>Temperatur Lindbäcksstadion</title>
     <style>
-        /* Anpassning för layout och 16:9-format */
         body {
-            margin: 0;
-            padding: 0;
-            height: 100vh;
-            width: 100vw;
+            font-family: Arial, sans-serif;
             display: flex;
-            flex-direction: column;
-            justify-content: space-between;
+            justify-content: center;
             align-items: center;
-            background: url('background.jpg') no-repeat center center fixed; /* Bakgrundsbild */
-            background-size: cover;
-            font-family: 'Arial', sans-serif;
-            color: #ffffff; /* Vit text för kontrast */
+            height: 100vh;
+            background-color: #f0f0f0;
+            margin: 0;
+            flex-direction: column;
             text-align: center;
         }
 
-        .header {
-            margin-top: 20px;
-            font-size: 5rem; /* Stor rubrik */
+        #content {
+            font-size: 3rem;
             font-weight: bold;
-            text-shadow: 3px 3px 6px #000000; /* Rubrik med skuggeffekt */
+            color: #333;
+            margin: 20px 0;
         }
 
-        .temperature-container {
-            flex: 1; /* Tar upp centralt utrymme */
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .temperature {
-            font-size: 21.6rem; /* Ännu större temperaturvisning (+20%) */
-            font-weight: bold;
-            color: #7fb8b4; /* Ljusare blå nyans */
-            text-shadow: 2px 2px 5px #000000;
-            margin: 0;
-            text-decoration: none; /* Ingen understrykning */
-        }
-
-        .temperature:hover {
-            color: #5f9ea0; /* Ljusare blå vid hover */
-        }
-
-        .error {
+        #clock {
             font-size: 2rem;
-            color: #FF6347;
-            margin-top: 10px; /* Flytta upp nära temperaturen */
-            text-shadow: 1px 1px 3px #000000;
-        }
-
-        .source {
-            font-size: 1.5rem;
-            margin-bottom: 20px;
-            text-shadow: 1px 1px 3px #000000;
-            background: rgba(0, 0, 0, 0.5); /* Halvtransparent bakgrund */
-            padding: 10px 20px;
-            border-radius: 10px;
-        }
-
-        .source a {
-            text-decoration: none;
-            color: #ffffff;
             font-weight: bold;
-        }
-
-        .source a:hover {
-            text-decoration: underline;
+            color: #333;
         }
     </style>
 </head>
 <body>
-    <div class="header">Välkommen till Lindbäcksstadion!</div>
-    <div class="temperature-container">
-        <a id="temperature-link" href="https://www.temperatur.nu/pitea-lindbacksstadion" target="_blank" class="temperature">
-            Laddar...
-        </a>
-        <div id="error-message" class="error"></div>
-    </div>
-    <div class="source">
-        Temperaturdata hämtat från <a href="https://www.temperatur.nu" target="_blank">Temperatur.nu</a>.
-    </div>
+    <div id="content">Laddar...</div>
+    <div id="clock">Laddar tid...</div>
+
     <script>
+        // Funktion för att hämta temperaturen från filen
         async function fetchTemperature() {
-            const errorMessageElement = document.getElementById("error-message");
-            const temperatureLink = document.getElementById("temperature-link");
-
             try {
-                // Hämta temperaturen från den nya URL:en
-                const response = await fetch("https://www.temperatur.nu/termo/gettemp.php?stadname=pitea-lindbacksstadion&what=temp");
-
-                if (!response.ok) throw new Error(`API svarade med status: ${response.status}`);
-                
-                const data = await response.text(); // Hämta som text istället för JSON
-                
-                if (!data) {
-                    throw new Error("Ingen temperaturdata hittades.");
-                }
-
-                const temperature = data.trim() + "°C"; // Lägg till enhet
-                temperatureLink.textContent = temperature;
-                temperatureLink.href = "https://www.temperatur.nu/pitea-lindbacksstadion";
-                errorMessageElement.textContent = ""; // Rensa eventuella fel
+                const response = await fetch("http://www.temperatur.nu/termo/pitea-lindbacksstadion/temp.txt");
+                if (!response.ok) throw new Error(`Fel vid hämtning: ${response.status}`);
+                const temperature = await response.text();
+                // Uppdatera content-div med den hämtade temperaturen
+                document.getElementById("content").textContent = `${temperature.trim()}°C`;
             } catch (error) {
-                // Visa "x.x°C" om temperaturen inte kan hämtas
-                temperatureLink.textContent = "x.x°C";
-                temperatureLink.href = "https://www.temperatur.nu/pitea-lindbacksstadion";
-                errorMessageElement.textContent = "Kunde inte hämta temperaturen just nu.";
-                console.error("Error fetching temperature data:", error);
+                console.error("Kunde inte hämta data:", error);
+                document.getElementById("content").textContent = "Kunde inte hämta temperaturen.";
             }
         }
 
-        fetchTemperature();
+        // Funktion för att uppdatera klockan
+        function updateClock() {
+            const clockElement = document.getElementById("clock");
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            clockElement.textContent = `${hours}:${minutes}:${seconds}`;
+        }
 
-        setInterval(fetchTemperature, 180000); // Uppdatera var 3:e minut
+        // Hämta temperaturen första gången
+        fetchTemperature();
+        // Uppdatera temperaturen var tredje minut
+        setInterval(fetchTemperature, 180000); // 180000 ms = 3 minuter
+
+        // Uppdatera klockan varje sekund
+        setInterval(updateClock, 1000);
     </script>
 </body>
 </html>
