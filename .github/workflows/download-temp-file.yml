@@ -30,3 +30,4 @@ jobs:
           author_name: 'GitHub Actions'
           author_email: 'actions@github.com'
           message: 'Uppdatera temperaturfilen'
+          token: ${{ secrets.GH_TOKEN }}  # Använd den skapade tokenen för push-åtkomst
