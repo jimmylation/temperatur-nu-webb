@@ -75,6 +75,15 @@
         .source a:hover {
             text-decoration: underline;
         }
+
+        /* Klockstil */
+        .clock {
+            font-size: 2rem;
+            color: #FFFFFF;
+            margin-top: 10px;
+            font-weight: bold;
+            text-shadow: 1px 1px 3px #000000;
+        }
     </style>
 </head>
 <body>
@@ -84,28 +93,30 @@
             Laddar...
         </a>
         <div id="error-message" class="error"></div>
+        <div id="clock" class="clock">Laddar tid...</div>
     </div>
     <div class="source">
         Temperaturdata hämtat från <a href="https://www.temperatur.nu" target="_blank">Temperatur.nu</a>.
     </div>
+
     <script>
+        // Funktion för att hämta temperaturen från den nya URL
         async function fetchTemperature() {
             const errorMessageElement = document.getElementById("error-message");
             const temperatureLink = document.getElementById("temperature-link");
 
             try {
-                const response = await fetch("https://api.temperatur.nu/tnu_1.17.php?p=pitea-lindbacksstadion&cli=api_demo");
+                const response = await fetch("https://www.temperatur.nu/termo/gettemp.php?stadname=pitea-lindbacksstadion&what=temp");
 
-                if (!response.ok) throw new Error(`API svarade med status: ${response.status}`);
+                if (!response.ok) throw new Error(`Fel vid hämtning: ${response.status}`);
                 
-                const data = await response.json();
+                const temperature = await response.text();
                 
-                if (!data.temperatur || data.temperatur.nu.length === 0) {
+                if (!temperature.trim()) {
                     throw new Error("Ingen temperaturdata hittades.");
                 }
 
-                const temperature = data.temperatur.nu[0].temp + "°C";
-                temperatureLink.textContent = temperature;
+                temperatureLink.textContent = `${temperature.trim()}°C`;
                 temperatureLink.href = "https://www.temperatur.nu/pitea-lindbacksstadion";
                 errorMessageElement.textContent = ""; // Rensa eventuella fel
             } catch (error) {
@@ -116,6 +127,8 @@
                 console.error("Error fetching temperature data:", error);
             }
         }
+
+        // Funktion för att uppdatera klockan
         function updateClock() {
             const clockElement = document.getElementById("clock");
             const now = new Date();
@@ -123,9 +136,14 @@
             const minutes = String(now.getMinutes()).padStart(2, '0');
             clockElement.textContent = `Klockan är ${hours}:${minutes}`;
         }
-        fetchTemperature();
 
-        setInterval(fetchTemperature, 180000); // Uppdatera var 3:e minut
+        // Hämta temperaturen första gången
+        fetchTemperature();
+        // Uppdatera temperaturen var tredje minut
+        setInterval(fetchTemperature, 180000); // 180000 ms = 3 minuter
+
+        // Uppdatera klockan varje minut
+        setInterval(updateClock, 60000); // 60000 ms = 1 minut
     </script>
 </body>
 </html>
