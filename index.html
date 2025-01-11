@@ -85,7 +85,7 @@
     <div class="header">Välkommen till Lindbäcksstadion!</div>
     <div class="temperature-container">
         <div id="temperature" class="temperature">
-                    <script type="text/javascript" src="https://www.temperatur.nu/jstemp.php?s=pitea-lindbacksstadion"></script>
+            <script type="text/javascript" src="https://www.temperatur.nu/jstemp.php?s=pitea-lindbacksstadion"></script>
         </div>
         <div id="error-message" class="error"></div>
         <div id="clock" class="clock">Laddar tid...</div>
@@ -94,7 +94,6 @@
         Temperaturdata hämtat från <a href="https://www.temperatur.nu" target="_blank">Temperatur.nu</a>.
     </div>
 
-    <!-- Skript för att hämta och visa temperaturen -->
     <script type="text/javascript">
         // Funktion för att uppdatera klockan
         function updateClock() {
@@ -105,33 +104,11 @@
             clockElement.textContent = `Senast uppdaterad kl. ${hours}:${minutes}`;
         }
 
+        // Uppdatera klockan omedelbart när sidan laddas
+        updateClock();
+
         // Uppdatera klockan varje minut
         setInterval(updateClock, 60000); // 60000 ms = 1 minut
-
-        // Hämta temperaturen från temperatur.nu
-      //  (function () {
-      //      const temperatureElement = document.getElementById("temperature");
-      //      const errorMessageElement = document.getElementById("error-message");
-
-            // Ladda skriptet från temperatur.nu som innehåller temperaturen
-      //      const script = document.createElement("script");
-      //      script.src = "https://www.temperatur.nu/jstemp.php?s=pitea-lindbacksstadion";
-      //      script.onload = function () {
-      //          if (typeof temperatur !== 'undefined') {
-      //              temperatureElement.textContent = temperatur + "°C";
-      //              errorMessageElement.textContent = ""; // Rensa felmeddelande
-      //          } else {
-      //              temperatureElement.textContent = "x.x°C"; // Sätt till "x.x°C" om ingen temperatur finns
-      //              errorMessageElement.textContent = "Kunde inte hämta temperaturen just nu.";
-      //          }
-            };
-            script.onerror = function () {
-                temperatureElement.textContent = "x.x°C";
-                errorMessageElement.textContent = "Kunde inte hämta temperaturen just nu.";
-            };
-            document.body.appendChild(script); // Ladda skriptet
-        })();
-
     </script>
 </body>
 </html>
