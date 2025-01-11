@@ -94,17 +94,18 @@
             const temperatureLink = document.getElementById("temperature-link");
 
             try {
-                const response = await fetch("https://api.temperatur.nu/tnu_1.17.php?p=pitea-lindbacksstadion&cli=api_demo");
+                // Hämta temperaturen från den nya URL:en
+                const response = await fetch("https://www.temperatur.nu/termo/gettemp.php?stadname=pitea-lindbacksstadion&what=temp");
 
                 if (!response.ok) throw new Error(`API svarade med status: ${response.status}`);
                 
-                const data = await response.json();
+                const data = await response.text(); // Hämta som text istället för JSON
                 
-                if (!data.temperatur || data.temperatur.nu.length === 0) {
+                if (!data) {
                     throw new Error("Ingen temperaturdata hittades.");
                 }
 
-                const temperature = data.temperatur.nu[0].temp + "°C";
+                const temperature = data.trim() + "°C"; // Lägg till enhet
                 temperatureLink.textContent = temperature;
                 temperatureLink.href = "https://www.temperatur.nu/pitea-lindbacksstadion";
                 errorMessageElement.textContent = ""; // Rensa eventuella fel
