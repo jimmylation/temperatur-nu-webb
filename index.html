@@ -85,6 +85,23 @@
     </style>
 </head>
 <body>
+    <div id="content2">Laddar...</div>
+        <script>
+            async function fetchData() {
+                try {
+                    const response = await fetch("http://www.temperatur.nu/termo/pitea-lindbacksstadion/temp.txt");
+                    if (!response.ok) throw new Error(`Fel vid hämtning: ${response.status}`);
+                    const data = await response.text();
+                    document.getElementById("content").textContent = data.trim();
+                } catch (error) {
+                    console.error("Kunde inte hämta data:", error);
+                    document.getElementById("content").textContent = "Kunde inte hämta data.";
+                }
+            }
+    
+            fetchData();
+            setInterval(fetchData, 180000); // Uppdatera var tredje minut
+        </script>
     <div class="header">Välkommen till Lindbäcksstadion!</div>
     <div class="temperature-container">
         <a id="temperature-link" href="https://www.temperatur.nu/pitea-lindbacksstadion" target="_blank" class="temperature">
