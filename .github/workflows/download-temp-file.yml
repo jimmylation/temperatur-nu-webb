@@ -13,16 +13,25 @@ jobs:
     - name: Check out repository
       uses: actions/checkout@v3
 
+    - name: Install git
+      run: sudo apt-get install git  # Installera git om det inte redan är installerat
+
     - name: Download temperaturfil
       run: curl -o temp.txt https://www.temperatur.nu/termo/gettemp.php?stadname=pitea-lindbacksstadion&what=temp
 
     - name: Commit och pusha uppdaterad temperaturfil
-      uses: EndBug/add-and-commit@v7
-      with:
-        author_name: 'GitHub Actions'
-        author_email: 'actions@github.com'
-        message: 'Uppdatera temperaturfilen'
-        push: true
-        branch: main  # Se till att den pushar till rätt branch (här används main)
-        add: '.'  # Lägg till alla ändrade filer
-        github_token: ${{ secrets.GITHUB_TOKEN }}  # Använd den inbyggda GITHUB_TOKEN
+      run: |
+        git config --global user.name "GitHub Actions"
+        git config --global user.email "actions@github.com"
+        
+        # Gör en commit om filen har ändrats
+        git add temp.txt
+        git commit -m "Uppdatera temperaturfilen" || echo "No changes to commit"
+        
+        # Hämta senaste ändringar från fjärrlagret och rebase för att undvika merge-konflikter
+        git pull --rebase origin main
+        
+        # Pusha ändringar till remote repository
+        git push origin main
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
