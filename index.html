@@ -89,9 +89,7 @@
 <body>
     <div class="header">Välkommen till Lindbäcksstadion!</div>
     <div class="temperature-container">
-        <a id="temperature-link" href="https://www.temperatur.nu/pitea-lindbacksstadion" target="_blank" class="temperature">
-            Laddar...
-        </a>
+        <div id="temperature"></div>
         <div id="error-message" class="error"></div>
         <div id="clock" class="clock">Laddar tid...</div>
     </div>
@@ -99,48 +97,18 @@
         Temperaturdata hämtat från <a href="https://www.temperatur.nu" target="_blank">Temperatur.nu</a>.
     </div>
 
+    <!-- Temperatur från temperatur.nu -->
+    <script type="text/javascript" src="https://www.temperatur.nu/jstemp.php?s=pitea-lindbacksstadion"></script>
+
     <script>
-        // Funktion för att hämta temperaturen från den nya URL
-        async function fetchTemperature() {
-            const errorMessageElement = document.getElementById("error-message");
-            const temperatureLink = document.getElementById("temperature-link");
-
-            try {
-                const response = await fetch("https://www.temperatur.nu/termo/gettemp.php?stadname=pitea-lindbacksstadion&what=temp");
-
-                if (!response.ok) throw new Error(`Fel vid hämtning: ${response.status}`);
-                
-                const temperature = await response.text();
-                
-                if (!temperature.trim()) {
-                    throw new Error("Ingen temperaturdata hittades.");
-                }
-
-                temperatureLink.textContent = `${temperature.trim()}°C`;
-                temperatureLink.href = "https://www.temperatur.nu/pitea-lindbacksstadion";
-                errorMessageElement.textContent = ""; // Rensa eventuella fel
-            } catch (error) {
-                // Visa "x.x°C" om temperaturen inte kan hämtas
-                temperatureLink.textContent = "x.x°C";
-                temperatureLink.href = "https://www.temperatur.nu/pitea-lindbacksstadion";
-                errorMessageElement.textContent = "Kunde inte hämta temperaturen just nu.";
-                console.error("Error fetching temperature data:", error);
-            }
-        }
-
         // Funktion för att uppdatera klockan
         function updateClock() {
             const clockElement = document.getElementById("clock");
             const now = new Date();
             const hours = String(now.getHours()).padStart(2, '0');
             const minutes = String(now.getMinutes()).padStart(2, '0');
-            clockElement.textContent = `Senast uppdaterad kl. ${hours}:${minutes}`;
+            clockElement.textContent = `Klockan är ${hours}:${minutes}`;
         }
-
-        // Hämta temperaturen första gången
-        fetchTemperature();
-        // Uppdatera temperaturen var tredje minut
-        setInterval(fetchTemperature, 180000); // 180000 ms = 3 minuter
 
         // Uppdatera klockan varje minut
         setInterval(updateClock, 60000); // 60000 ms = 1 minut
