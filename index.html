@@ -57,6 +57,13 @@
             text-shadow: 1px 1px 3px #000000;
         }
 
+        .clock {
+            font-size: 2rem;
+            color: #ffffff;
+            margin-top: 10px;
+            text-shadow: 1px 1px 3px #000000;
+        }
+
         .source {
             font-size: 1.5rem;
             margin-bottom: 20px;
@@ -84,6 +91,7 @@
             Laddar...
         </a>
         <div id="error-message" class="error"></div>
+        <div id="clock" class="clock"></div> <!-- Klocka -->
     </div>
     <div class="source">
         Temperaturdata hämtat från <a href="https://www.temperatur.nu" target="_blank">Temperatur.nu</a>.
@@ -96,21 +104,15 @@
             try {
                 const response = await fetch("http://www.temperatur.nu/termo/pitea-lindbacksstadion/temp.txt");
 
-                if (!response.ok) throw new Error(`Kunde inte hämta temperaturdata. Status: ${response.status}`);
-                
+                if (!response.ok) throw new Error(`API svarade med status: ${response.status}`);
+
                 const temperature = await response.text();
 
-                // Trimma och validera temperaturen
-                if (!temperature || isNaN(parseFloat(temperature))) {
-                    throw new Error("Ogiltig temperaturdata.");
-                }
-
-                const formattedTemperature = parseFloat(temperature).toFixed(1) + "°C";
-                temperatureLink.textContent = formattedTemperature;
+                temperatureLink.textContent = `${temperature.trim()}°C`;
                 temperatureLink.href = "https://www.temperatur.nu/pitea-lindbacksstadion";
                 errorMessageElement.textContent = ""; // Rensa eventuella fel
             } catch (error) {
-                // Visa fallback-temperatur om det inte fungerar
+                // Visa "x.x°C" om temperaturen inte kan hämtas
                 temperatureLink.textContent = "x.x°C";
                 temperatureLink.href = "https://www.temperatur.nu/pitea-lindbacksstadion";
                 errorMessageElement.textContent = "Kunde inte hämta temperaturen just nu.";
@@ -118,9 +120,22 @@
             }
         }
 
-        fetchTemperature();
+        function updateClock() {
+            const clockElement = document.getElementById("clock");
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            clockElement.textContent = `Klockan är ${hours}:${minutes}:${seconds}`;
+        }
 
+        // Hämta temperatur vid start och uppdatera var 3:e minut
+        fetchTemperature();
         setInterval(fetchTemperature, 180000); // Uppdatera var 3:e minut
+
+        // Starta klockan och uppdatera var 15:e sekund
+        updateClock();
+        setInterval(updateClock, 15000);
     </script>
 </body>
 </html>
