@@ -19,6 +19,16 @@ jobs:
     - name: Download temperaturfil
       run: curl -o temp.txt https://www.temperatur.nu/termo/gettemp.php?stadname=pitea-lindbacksstadion&what=temp
 
+    - name: Verifiera att temp.txt har hämtats
+      run: |
+        # Kontrollera att temp.txt finns och visa innehållet
+        if [ -f "temp.txt" ]; then
+          echo "Filen temp.txt finns!"
+          cat temp.txt  # Visa innehållet i temp.txt för att säkerställa att den har laddats ner korrekt
+        else
+          echo "Filen temp.txt finns inte!"
+        fi
+
     - name: Commit och pusha uppdaterad temperaturfil
       run: |
         git config --global user.name "GitHub Actions"
