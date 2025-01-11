@@ -1,35 +1,28 @@
-name: Ladda ner temperaturfil och uppdatera GitHub
+name: Download and Update Temperatur File
 
 on:
   schedule:
     - cron: '*/3 * * * *'  # Kör var tredje minut
-  push:
-    branches:
-      - main  # Kör när du pushar till main
+  workflow_dispatch:  # Gör det möjligt att trigga manuellt
 
 jobs:
-  download_and_update:
+  download-and-update:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
+    - name: Check out repository
+      uses: actions/checkout@v3
 
-      - name: Installera Python och requests
-        run: |
-          sudo apt-get update
-          sudo apt-get install python3-pip
-          pip3 install requests
+    - name: Download temperaturfil
+      run: curl -o temp.txt http://www.temperatur.nu/termo/pitea-lindbacksstadion/temp.txt
 
-      - name: Ladda ner och spara temperaturfilen
-        run: python3 download_temp_file.py
-
-      - name: Commit och pusha uppdaterad temperaturfil
-        uses: EndBug/add-and-commit@v7
-        with:
-          author_name: 'GitHub Actions'
-          author_email: 'actions@github.com'
-          message: 'Uppdatera temperaturfilen'
-          push: true  # Lägg till detta för att tillåta push
-          branch: main  # Se till att den pushar till rätt branch (här används main)
-
+    - name: Commit och pusha uppdaterad temperaturfil
+      uses: EndBug/add-and-commit@v7
+      with:
+        author_name: 'GitHub Actions'
+        author_email: 'actions@github.com'
+        message: 'Uppdatera temperaturfilen'
+        push: true
+        branch: main  # Se till att den pushar till rätt branch (här används main)
+        add: '.'  # Lägg till alla ändrade filer
+        github_token: ${{ secrets.GITHUB_TOKEN }}  # Använd den inbyggda GITHUB_TOKEN
