@@ -110,21 +110,21 @@
         setInterval(updateClock, 60000); // 60000 ms = 1 minut
 
         // Hämta temperaturen från temperatur.nu
-        (function () {
-            const temperatureElement = document.getElementById("temperature");
-            const errorMessageElement = document.getElementById("error-message");
+      //  (function () {
+      //      const temperatureElement = document.getElementById("temperature");
+      //      const errorMessageElement = document.getElementById("error-message");
 
             // Ladda skriptet från temperatur.nu som innehåller temperaturen
-            const script = document.createElement("script");
-            script.src = "https://www.temperatur.nu/jstemp.php?s=pitea-lindbacksstadion";
-            script.onload = function () {
-                if (typeof temperatur !== 'undefined') {
-                    temperatureElement.textContent = temperatur + "°C";
-                    errorMessageElement.textContent = ""; // Rensa felmeddelande
-                } else {
-                    temperatureElement.textContent = "x.x°C"; // Sätt till "x.x°C" om ingen temperatur finns
-                    errorMessageElement.textContent = "Kunde inte hämta temperaturen just nu.";
-                }
+      //      const script = document.createElement("script");
+      //      script.src = "https://www.temperatur.nu/jstemp.php?s=pitea-lindbacksstadion";
+      //      script.onload = function () {
+      //          if (typeof temperatur !== 'undefined') {
+      //              temperatureElement.textContent = temperatur + "°C";
+      //              errorMessageElement.textContent = ""; // Rensa felmeddelande
+      //          } else {
+      //              temperatureElement.textContent = "x.x°C"; // Sätt till "x.x°C" om ingen temperatur finns
+      //              errorMessageElement.textContent = "Kunde inte hämta temperaturen just nu.";
+      //          }
             };
             script.onerror = function () {
                 temperatureElement.textContent = "x.x°C";
