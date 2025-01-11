@@ -1,0 +1,31 @@
+name: Uppdatera temperatur
+
+on:
+  schedule:
+    - cron: '*/3 * * * *'  # Kör var tredje minut
+  push:
+    branches:
+      - main  # Kör när du pushar till main
+
+jobs:
+  update_html:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Installera Python och requests
+        run: |
+          sudo apt-get install python3
+          pip install requests
+
+      - name: Kör Python-skriptet för att uppdatera HTML
+        run: python3 update_temperature.py
+
+      - name: Commit och pusha uppdaterad HTML
+        uses: EndBug/add-and-commit@v7
+        with:
+          author_name: 'GitHub Actions'
+          author_email: 'actions@github.com'
+          message: 'Uppdatera temperatur i HTML'
