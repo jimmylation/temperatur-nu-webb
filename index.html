@@ -96,7 +96,7 @@
         <div id="clock" class="clock">Laddar tid...</div>
     </div>
     <div class="source">
-        Temperaturdata hämtad från <a href="https://www.temperatur.nu" target="_blank">Temperatur.nu</a>.
+        Temperaturdata hämtat från <a href="https://www.temperatur.nu" target="_blank">Temperatur.nu</a>.
     </div>
 
     <script>
@@ -119,6 +119,7 @@
                 temperatureLink.textContent = `${temperature.trim()}°C`;
                 temperatureLink.href = "https://www.temperatur.nu/pitea-lindbacksstadion";
                 errorMessageElement.textContent = ""; // Rensa eventuella fel
+
             } catch (error) {
                 // Visa "x.x°C" om temperaturen inte kan hämtas
                 temperatureLink.textContent = "x.x°C";
@@ -137,13 +138,12 @@
             clockElement.textContent = `Senast uppdaterad kl. ${hours}:${minutes}`;
         }
 
-        // Hämta temperaturen första gången
-        fetchTemperature();
+        // Hämta temperaturen och klockan första gången
+        updateClock(); // Klockan uppdateras direkt
+        fetchTemperature(); // Hämta temperaturen
+
         // Uppdatera temperaturen var tredje minut
         setInterval(fetchTemperature, 180000); // 180000 ms = 3 minuter
-
-        // Uppdatera klockan varje minut
-        setInterval(updateClock, 60000); // 60000 ms = 1 minut
     </script>
 </body>
 </html>
