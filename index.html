@@ -13,27 +13,17 @@
             height: 100vh;
             background-color: #f0f0f0;
             margin: 0;
-            flex-direction: column;
-            text-align: center;
         }
-
         #content {
-            font-size: 3rem;
-            font-weight: bold;
-            color: #333;
-            margin: 20px 0;
-        }
-
-        #clock {
             font-size: 2rem;
             font-weight: bold;
             color: #333;
+            text-align: center;
         }
     </style>
 </head>
 <body>
     <div id="content">Laddar...</div>
-    <div id="clock">Laddar tid...</div>
 
     <script>
         // Funktion för att hämta temperaturen från filen
@@ -50,23 +40,10 @@
             }
         }
 
-        // Funktion för att uppdatera klockan
-        function updateClock() {
-            const clockElement = document.getElementById("clock");
-            const now = new Date();
-            const hours = String(now.getHours()).padStart(2, '0');
-            const minutes = String(now.getMinutes()).padStart(2, '0');
-            const seconds = String(now.getSeconds()).padStart(2, '0');
-            clockElement.textContent = `${hours}:${minutes}:${seconds}`;
-        }
-
         // Hämta temperaturen första gången
         fetchTemperature();
         // Uppdatera temperaturen var tredje minut
         setInterval(fetchTemperature, 180000); // 180000 ms = 3 minuter
-
-        // Uppdatera klockan varje sekund
-        setInterval(updateClock, 1000);
     </script>
 </body>
 </html>
