@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Välkommen till Lindbäcksstadion!</title>
     <style>
-        /* Anpassning för layout och 16:9-format */
         body {
             margin: 0;
             padding: 0;
@@ -15,86 +14,61 @@
             flex-direction: column;
             justify-content: space-between;
             align-items: center;
-            background: url('background.jpg') no-repeat center center fixed; /* Bakgrundsbild */
+            background: url('background.jpg') no-repeat center center fixed;
             background-size: cover;
             font-family: 'Arial', sans-serif;
-            color: #ffffff; /* Vit text för kontrast */
+            color: #ffffff;
             text-align: center;
         }
 
         .header {
             margin-top: 18px;
-            font-size: 3rem; /* Mindre rubrikstorlek */
+            font-size: 3rem;
             font-weight: bold;
-            text-shadow: 2px 2px 4px #000000; /* Minskat skuggeffekt */
+            text-shadow: 2px 2px 4px #000000;
         }
 
         .temperature-container {
-            flex: 1; /* Tar upp centralt utrymme */
+            flex: 1;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            position: relative; /* Så pilen kan placeras absolut */
+            position: relative;
         }
 
         .temperature {
-            font-size: 14rem; /* Temperaturstorlek */
+            font-size: 14rem;
             font-weight: bold;
-            color: ##0000FF; /* Huvudfärg på texten */
-            text-shadow: 
-            1px 1px 2px #000000,  /* Smal svart skugga */
-            2px 2px 4px #000000,  /* Tunnare glow */
-            -1px -1px 2px #000000; /* Liten negativ skugga för balans */
+            color: #0000FF;
+            text-shadow: 1px 1px 2px #000000, 2px 2px 4px #000000, -1px -1px 2px #000000;
             margin: 0;
         }
 
         .error {
-            font-size: 1.5rem; /* Mindre felmeddelande */
+            font-size: 1.5rem;
             color: #FF6347;
-            margin-top: 10px; /* Flytta upp nära temperaturen */
+            margin-top: 10px;
             text-shadow: 1px 1px 3px #000000;
         }
 
         .source {
-            font-size: 1rem; /* Mindre källa-text */
+            font-size: 1rem;
             margin-bottom: 20px;
             text-shadow: 1px 1px 3px #000000;
-            background: rgba(0, 0, 0, 0.5); /* Halvtransparent bakgrund */
+            background: rgba(0, 0, 0, 0.5);
             padding: 10px 20px;
             border-radius: 10px;
         }
 
-        /* Länkstil */
-        a {
-            text-decoration: none; /* Tar bort understrykning */
-            color: rgb(255, 255, 255); /* Mjuk blå färg */
-            font-weight: bold; /* Fet stil */
-        }
-
-        a:hover {
-            color: #4a88b8; /* Mörkare blå vid hover */
-        }
-
-        .source a {
-            text-decoration: none;
-            color: #ffffff;
-        }
-
-        .source a:hover {
-            text-decoration: underline;
-        }
-
-        /* Klockstil */
         .clock {
-            font-size: 1.2rem; /* Mindre klocktext */
+            font-size: 1.2rem;
             color: #FFFFFF;
             margin-top: 10px;
             font-weight: bold;
             text-shadow: 1px 1px 3px #000000;
         }
 
-        /* Pilens stil */
         .up-arrow, .down-arrow {
             font-size: 3rem;
             position: absolute;
@@ -122,7 +96,7 @@
         <div id="temperature" class="temperature">10</div> <!-- Temporär temperaturtext för test -->
         <div id="error-message" class="error"></div>
         <div id="clock" class="clock">Laddar tid...</div>
-        <!-- Pilerna som kommer att visas -->
+
         <div id="up-arrow" class="up-arrow hidden">↑</div>
         <div id="down-arrow" class="down-arrow hidden">↓</div>
     </div>
@@ -131,64 +105,53 @@
     </div>
 
     <script type="text/javascript">
-        // Funktion för att uppdatera klockan
-        function updateClock() {
-            const clockElement = document.getElementById("clock");
-            const now = new Date();
-            const hours = String(now.getHours()).padStart(2, '0');
-            const minutes = String(now.getMinutes()).padStart(2, '0');
-            clockElement.textContent = `Senast uppdaterad kl. ${hours}:${minutes}`;
-        }
-
-        // Uppdatera klockan omedelbart när sidan laddas
-        updateClock();
-
-        // Uppdatera klockan varje minut
-        setInterval(updateClock, 60000); // 60000 ms = 1 minut
-
         let previousTemperature = null;
         let lastChangeDirection = null;
+
+        // Simulerad temperaturfunktion (det här är den del som i verkligheten skulle hämta temperatur från API)
+        function getTemperature() {
+            // Här kan du testa att uppdatera temperaturer
+            const temperature = Math.random() * 20 - 10;  // Simulerar temperatur mellan -10 och 10 grader
+            return temperature;
+        }
 
         // Funktion för att uppdatera temperaturen och pilens riktning
         function updateTemperature() {
             const temperatureElement = document.getElementById("temperature");
+            const upArrow = document.getElementById("up-arrow");
+            const downArrow = document.getElementById("down-arrow");
 
-            // Temporär temperatur (kan tas bort när riktiga data är tillgängliga)
-            const temperature = parseFloat(temperatureElement.textContent);
-            
-            if (!isNaN(temperature)) {
-                let upArrow = document.getElementById("up-arrow");
-                let downArrow = document.getElementById("down-arrow");
+            // Hämta temperatur
+            const temperature = getTemperature();
+            temperatureElement.textContent = temperature.toFixed(1); // Uppdatera texten på skärmen
 
-                // Om temperaturen har förändrats jämfört med föregående värde
-                if (previousTemperature !== null) {
-                    if (temperature > previousTemperature) {
-                        // Om temperaturen har ökat
+            if (previousTemperature !== null) {
+                if (temperature > previousTemperature) {
+                    // Om temperaturen har ökat
+                    upArrow.classList.remove("hidden");
+                    downArrow.classList.add("hidden");
+                    lastChangeDirection = "up";
+                } else if (temperature < previousTemperature) {
+                    // Om temperaturen har minskat
+                    upArrow.classList.add("hidden");
+                    downArrow.classList.remove("hidden");
+                    lastChangeDirection = "down";
+                } else {
+                    // Temperaturen är samma som tidigare
+                    if (lastChangeDirection === "up") {
                         upArrow.classList.remove("hidden");
-                        downArrow.classList.add("hidden");
-                        lastChangeDirection = "up";
-                    } else if (temperature < previousTemperature) {
-                        // Om temperaturen har minskat
-                        upArrow.classList.add("hidden");
+                    } else if (lastChangeDirection === "down") {
                         downArrow.classList.remove("hidden");
-                        lastChangeDirection = "down";
-                    } else {
-                        // Temperaturen är samma
-                        if (lastChangeDirection === "up") {
-                            upArrow.classList.remove("hidden");
-                        } else if (lastChangeDirection === "down") {
-                            downArrow.classList.remove("hidden");
-                        }
                     }
                 }
-                
-                // Uppdatera föregående temperatur för nästa gång
-                previousTemperature = temperature;
             }
+
+            // Uppdatera föregående temperatur för nästa gång
+            previousTemperature = temperature;
         }
 
-        // Uppdatera temperaturen varje sekund
-        setInterval(updateTemperature, 1000); // Uppdaterar var 1 sekund för att fånga förändringar i temperatur
+        // Uppdatera temperaturen var 5:e sekund för test
+        setInterval(updateTemperature, 5000); // Uppdatera temperaturen och pilen varje 5:e sekund
     </script>
 </body>
 </html>
