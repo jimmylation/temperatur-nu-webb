@@ -31,7 +31,7 @@
         .temperature-container {
             flex: 1;
             display: flex;
-            flex-direction: row; /* Ändrat till row så att pilen kommer bredvid */
+            flex-direction: row; /* Row så pilen kommer bredvid */
             justify-content: center;
             align-items: center;
             position: relative;
@@ -72,8 +72,9 @@
         .up-arrow, .down-arrow {
             font-size: 14rem; /* Större pil */
             font-weight: bold; /* Fetstil */
-            margin-left: 1rem; /* Ett mellanslag i storleken av 14rem */
+            margin-left: 3rem; /* Större avstånd mellan pil och temperatur */
             transition: opacity 0.5s ease;
+            text-shadow: 1px 1px 2px #000000, 2px 2px 4px #000000, -1px -1px 2px #000000; /* Samma glow som temperaturtext */
         }
 
         .up-arrow {
