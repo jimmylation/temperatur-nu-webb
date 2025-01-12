@@ -142,14 +142,14 @@
             temperatureElement.style.color = color;
         }
         
-        // Funktion för att extrahera och uppdatera temperaturen
-        function updateTemperature() {
+        // Funktion för att extrahera temperaturvärdet och uppdatera färgen
+        function extractAndUpdateTemperature() {
             const temperatureElement = document.getElementById("temperature");
         
             // Hämta temperaturtexten från det externa skriptet
             const temperatureText = temperatureElement.textContent || temperatureElement.innerText;
         
-            // Försök att extrahera temperaturen som ett nummer (kan vara ett heltal eller decimaltal)
+            // Försök att extrahera temperaturen som ett nummer
             const temperature = parseFloat(temperatureText);
         
             // Om det är ett giltigt nummer, uppdatera temperaturens färg
@@ -157,6 +157,22 @@
                 updateTemperatureColor(temperature);
             }
         }
+        
+        // Skapa en MutationObserver för att övervaka förändringar i temperaturens textinnehåll
+        const observer = new MutationObserver(() => {
+            extractAndUpdateTemperature(); // Kör när innehållet ändras
+        });
+        
+        // Börja observera förändringar i #temperature-elementet
+        const temperatureElement = document.getElementById("temperature");
+        const config = { childList: true, subtree: true }; // Titta på förändringar i barn-element
+        observer.observe(temperatureElement, config);
+        
+        // Vi behöver också sätta en initial färg när sidan först laddas, så vi kör en initial funktion.
+        window.onload = function() {
+            extractAndUpdateTemperature();
+        };
+
         
         // Vänta på att skriptet ska ladda och sedan uppdatera temperatur och färg
         setInterval(updateTemperature, 1000); // Uppdatera varje sekund
