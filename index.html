@@ -40,7 +40,7 @@
         .temperature {
             font-size: 14rem; /* Temperaturstorlek */
             font-weight: bold;
-            color: #7fb8b4; /* Huvudfärg på texten */
+            color: ##0000FF; /* Huvudfärg på texten */
             text-shadow: 
             1px 1px 2px #000000,  /* Smal svart skugga */
             2px 2px 4px #000000,  /* Tunnare glow */
@@ -64,10 +64,25 @@
             border-radius: 10px;
         }
 
-        /* Förhindra att temperatur och källa-text blir klickbara */
-        #temperature, .source a {
+        /* Länkstil */
+        a {
             text-decoration: none; /* Tar bort understrykning */
-            color: inherit; /* Bevara färg från föräldrarnas stil */
+            color: #6fa3d9; /* Mjuk blå färg */
+            font-weight: bold; /* Fet stil */
+        }
+
+        a:hover {
+            color: #4a88b8; /* Mörkare blå vid hover */
+        }
+
+        .source a {
+            text-decoration: none;
+            color: #ffffff;
+            font-weight: bold;
+        }
+
+        .source a:hover {
+            text-decoration: underline;
         }
 
         /* Klockstil */
@@ -108,43 +123,6 @@
 
         // Uppdatera klockan varje minut
         setInterval(updateClock, 60000); // 60000 ms = 1 minut
-
-        // Funktion för att uppdatera temperaturens färg
-        function updateTemperatureColor(temperature) {
-            const temperatureElement = document.getElementById("temperature");
-
-            let color;
-            if (temperature > 1) {
-                color = 'rgb(255, 0, 0)'; // Röd
-            } else if (temperature >= -4 && temperature <= 1) {
-                color = 'rgb(148, 0, 211)'; // Violett
-            } else if (temperature >= -10 && temperature < -4) {
-                color = 'rgb(0, 0, 255)'; // Blå
-            } else if (temperature >= -20 && temperature < -10) {
-                color = 'rgb(0, 255, 0)'; // Grön
-            } else {
-                color = 'rgb(255, 255, 255)'; // Vit
-            }
-
-            temperatureElement.style.color = color;
-        }
-
-        // Funktion som uppdaterar temperatur och kallar på updateTemperatureColor
-        function updateTemperature() {
-            const temperatureElement = document.getElementById("temperature");
-            
-            // Vi behöver extrahera temperaturen från den externa script-taggen.
-            const temperatureText = temperatureElement.textContent;
-
-            // Om temperaturtexten innehåller ett nummer, analysera det
-            const temperature = parseFloat(temperatureText);
-            if (!isNaN(temperature)) {
-                updateTemperatureColor(temperature);
-            }
-        }
-
-        // Uppdatera temperaturen och färg efter att skriptet har laddats
-        setInterval(updateTemperature, 1000); // Uppdaterar var 1 sekund för att fånga förändringar i temperatur
     </script>
 </body>
 </html>
