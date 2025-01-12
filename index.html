@@ -125,7 +125,7 @@
         // Funktion för att uppdatera temperaturens färg
         function updateTemperatureColor(temperature) {
             const temperatureElement = document.getElementById("temperature");
-
+        
             let color;
             if (temperature > 1) {
                 color = 'rgb(255, 0, 0)'; // Röd
@@ -138,26 +138,28 @@
             } else {
                 color = 'rgb(255, 255, 255)'; // Vit
             }
-
+        
             temperatureElement.style.color = color;
         }
-
-        // Funktion som uppdaterar temperatur och kallar på updateTemperatureColor
+        
+        // Funktion för att extrahera och uppdatera temperaturen
         function updateTemperature() {
             const temperatureElement = document.getElementById("temperature");
-            
-            // Vi behöver extrahera temperaturen från den externa script-taggen.
-            const temperatureText = temperatureElement.textContent;
-
-            // Om temperaturtexten innehåller ett nummer, analysera det
+        
+            // Hämta temperaturtexten från det externa skriptet
+            const temperatureText = temperatureElement.textContent || temperatureElement.innerText;
+        
+            // Försök att extrahera temperaturen som ett nummer (kan vara ett heltal eller decimaltal)
             const temperature = parseFloat(temperatureText);
+        
+            // Om det är ett giltigt nummer, uppdatera temperaturens färg
             if (!isNaN(temperature)) {
                 updateTemperatureColor(temperature);
             }
         }
-
-        // Uppdatera temperaturen och färg efter att skriptet har laddats
-        setInterval(updateTemperature, 1000); // Uppdaterar var 1 sekund för att fånga förändringar i temperatur
+        
+        // Vänta på att skriptet ska ladda och sedan uppdatera temperatur och färg
+        setInterval(updateTemperature, 1000); // Uppdatera varje sekund
 
     </script>
 </body>
