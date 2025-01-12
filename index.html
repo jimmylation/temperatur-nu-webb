@@ -32,7 +32,7 @@
         .temperature-container {
             flex: 1; /* Tar upp centralt utrymme */
             display: flex;
-            flex-direction: column;
+            flex-direction: row; /* Ändrat till radlayout */
             justify-content: center;
             align-items: center;
         }
@@ -40,7 +40,7 @@
         .temperature {
             font-size: 14rem; /* Temperaturstorlek */
             font-weight: bold;
-            color: ##0000FF; /* Huvudfärg på texten */
+            color: #0000FF; /* Huvudfärg på texten */
             text-shadow: 
             1px 1px 2px #000000,  /* Smal svart skugga */
             2px 2px 4px #000000,  /* Tunnare glow */
@@ -118,9 +118,7 @@
 <body>
     <div class="header">Välkommen till Lindbäcksstadion!</div>
     <div class="temperature-container">
-        <div id="temperature" class="temperature">
-            <script type="text/javascript" src="https://www.temperatur.nu/jstemp.php?s=pitea-lindbacksstadion"></script>
-        </div>
+        <div id="temperature" class="temperature">Laddar...</div>
         <div id="up-arrow" class="up-arrow hidden">↑</div>
         <div id="down-arrow" class="down-arrow hidden">↓</div>
         <div id="error-message" class="error"></div>
@@ -151,7 +149,8 @@
         let lastChangeDirection = null;
 
         function getTemperature() {
-            const temperature = Math.random() * 20 - 10;  // Simulerar temperatur mellan -10 och 10 grader
+            // Här ska du få den riktiga temperaturen från temperatur.nu
+            const temperature = parseFloat(document.querySelector("#temperature").textContent.replace("°C", ""));
             return temperature;
         }
 
