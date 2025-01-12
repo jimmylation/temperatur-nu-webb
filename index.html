@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Välkommen till Lindbäcksstadion!</title>
     <style>
+        /* Anpassning för layout och 16:9-format */
         body {
             margin: 0;
             padding: 0;
@@ -14,150 +15,115 @@
             flex-direction: column;
             justify-content: space-between;
             align-items: center;
-            background: url('background.jpg') no-repeat center center fixed;
+            background: url('background.jpg') no-repeat center center fixed; /* Bakgrundsbild */
             background-size: cover;
             font-family: 'Arial', sans-serif;
-            color: #ffffff;
+            color: #ffffff; /* Vit text för kontrast */
             text-align: center;
         }
 
         .header {
             margin-top: 18px;
-            font-size: 3rem;
+            font-size: 3rem; /* Mindre rubrikstorlek */
             font-weight: bold;
-            text-shadow: 2px 2px 4px #000000;
+            text-shadow: 2px 2px 4px #000000; /* Minskat skuggeffekt */
         }
 
         .temperature-container {
-            flex: 1;
+            flex: 1; /* Tar upp centralt utrymme */
             display: flex;
-            flex-direction: row;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
-            position: relative;
         }
 
         .temperature {
-            font-size: 14rem;
+            font-size: 14rem; /* Temperaturstorlek */
             font-weight: bold;
-            color: #0000FF;
-            text-shadow: 1px 1px 2px #000000, 2px 2px 4px #000000, -1px -1px 2px #000000;
+            color: ##0000FF; /* Huvudfärg på texten */
+            text-shadow: 
+            1px 1px 2px #000000,  /* Smal svart skugga */
+            2px 2px 4px #000000,  /* Tunnare glow */
+            -1px -1px 2px #000000; /* Liten negativ skugga för balans */
             margin: 0;
         }
 
         .error {
-            font-size: 1.5rem;
+            font-size: 1.5rem; /* Mindre felmeddelande */
             color: #FF6347;
-            margin-top: 10px;
+            margin-top: 10px; /* Flytta upp nära temperaturen */
             text-shadow: 1px 1px 3px #000000;
         }
 
         .source {
-            font-size: 1rem;
+            font-size: 1rem; /* Mindre källa-text */
             margin-bottom: 20px;
             text-shadow: 1px 1px 3px #000000;
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(0, 0, 0, 0.5); /* Halvtransparent bakgrund */
             padding: 10px 20px;
             border-radius: 10px;
         }
 
+        /* Länkstil */
+        a {
+            text-decoration: none; /* Tar bort understrykning */
+            color: rgb(255, 255, 255); /* Mjuk blå färg */
+            font-weight: bold; /* Fet stil */
+        }
+
+        a:hover {
+            color: #4a88b8; /* Mörkare blå vid hover */
+        }
+
+        .source a {
+            text-decoration: none;
+            color: #ffffff;
+        }
+
+        .source a:hover {
+            text-decoration: underline;
+        }
+
+        /* Klockstil */
         .clock {
-            font-size: 1.2rem;
+            font-size: 1.2rem; /* Mindre klocktext */
             color: #FFFFFF;
             margin-top: 10px;
             font-weight: bold;
             text-shadow: 1px 1px 3px #000000;
         }
-
-        .up-arrow, .down-arrow {
-            font-size: 7rem;
-            font-weight: bold;
-            margin-left: 3rem;
-            transition: opacity 0.5s ease;
-            text-shadow: 1px 1px 2px #000000, 2px 2px 4px #000000, -1px -1px 2px #000000;
-        }
-
-        .up-arrow {
-            color: red;
-        }
-
-        .down-arrow {
-            color: blue;
-        }
-
-        .hidden {
-            display: none;
-        }
-
     </style>
 </head>
 <body>
     <div class="header">Välkommen till Lindbäcksstadion!</div>
     <div class="temperature-container">
-        <div id="temperature" class="temperature">0</div>
-        <div id="up-arrow" class="up-arrow hidden">↑</div>
-        <div id="down-arrow" class="down-arrow hidden">↓</div>
+        <div id="temperature" class="temperature">
+            <script type="text/javascript" src="https://www.temperatur.nu/jstemp.php?s=pitea-lindbacksstadion"></script>
+        </div>
+        <div id="error-message" class="error"></div>
+        <div id="clock" class="clock">Laddar tid...</div>
     </div>
     <div class="source">
         Temperaturdata hämtad från <a href="https://www.temperatur.nu" target="_blank">Temperatur.nu</a>
     </div>
 
     <script type="text/javascript">
-        let previousTemperature = null;
-        let lastChangeDirection = null;
-
-        // Funktion för att hämta temperaturen från den externa källan
-        function fetchTemperature() {
-            // Skapa en ny script-tag för att hämta temperaturvärdet via den externa källan
-            const script = document.createElement('script');
-            script.src = 'https://www.temperatur.nu/jstemp.php?s=pitea-lindbacksstadion';
-            document.head.appendChild(script);
-
-            // Den externa källan kommer att tilldela ett globala variabelvärde, så vi måste använda den här:
-            script.onload = function() {
-                if (typeof temperature !== 'undefined') {
-                    updateTemperature(temperature);
-                } else {
-                    console.error('Temperaturvärdet är inte tillgängligt!');
-                }
-            };
+        // Funktion för att uppdatera klockan
+        function updateClock() {
+            const clockElement = document.getElementById("clock");
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            clockElement.textContent = `Senast uppdaterad kl. ${hours}:${minutes}`;
         }
 
-        // Uppdatera temperatur och pilernas synlighet
-        function updateTemperature(temperature) {
-            const temperatureElement = document.getElementById("temperature");
-            const upArrow = document.getElementById("up-arrow");
-            const downArrow = document.getElementById("down-arrow");
+        // Uppdatera klockan omedelbart när sidan laddas
+        updateClock();
 
-            // Uppdatera temperaturtexten
-            temperatureElement.textContent = temperature.toFixed(1);
+        // Uppdatera klockan varje minut
+        setInterval(updateClock, 60000); // 60000 ms = 1 minut
 
-            // Kontrollera om temperaturen har förändrats och uppdatera pilarna
-            if (previousTemperature !== null) {
-                if (temperature > previousTemperature) {
-                    upArrow.classList.remove("hidden");
-                    downArrow.classList.add("hidden");
-                    lastChangeDirection = "up";
-                } else if (temperature < previousTemperature) {
-                    upArrow.classList.add("hidden");
-                    downArrow.classList.remove("hidden");
-                    lastChangeDirection = "down";
-                } else {
-                    if (lastChangeDirection === "up") {
-                        upArrow.classList.remove("hidden");
-                    } else if (lastChangeDirection === "down") {
-                        downArrow.classList.remove("hidden");
-                    }
-                }
-            }
-
-            previousTemperature = temperature;
-
-            // Uppdatera färgen beroende på temperatur
-            updateTemperatureColor(temperature);
-        }
-
-        // Funktion för att uppdatera färgen baserat på temperaturen
+        // Funktion för att uppdatera temperaturens färg
         function updateTemperatureColor(temperature) {
             const temperatureElement = document.getElementById("temperature");
 
@@ -177,8 +143,23 @@
             temperatureElement.style.color = color;
         }
 
-        // Hämtar temperatur från den externa källan var 10:e sekund
-        setInterval(fetchTemperature, 10000);
+        // Funktion som uppdaterar temperatur och kallar på updateTemperatureColor
+        function updateTemperature() {
+            const temperatureElement = document.getElementById("temperature");
+            
+            // Vi behöver extrahera temperaturen från den externa script-taggen.
+            const temperatureText = temperatureElement.textContent;
+
+            // Om temperaturtexten innehåller ett nummer, analysera det
+            const temperature = parseFloat(temperatureText);
+            if (!isNaN(temperature)) {
+                updateTemperatureColor(temperature);
+            }
+        }
+
+        // Uppdatera temperaturen och färg efter att skriptet har laddats
+        setInterval(updateTemperature, 1000); // Uppdaterar var 1 sekund för att fånga förändringar i temperatur
+
     </script>
 </body>
 </html>
