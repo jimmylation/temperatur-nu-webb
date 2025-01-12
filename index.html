@@ -46,7 +46,6 @@
             2px 2px 4px #000000,  /* Tunnare glow */
             -1px -1px 2px #000000; /* Liten negativ skugga för balans */
             margin: 0;
-            text-decoration: none; /* Tar bort understrykning */
         }
 
         .error {
@@ -65,6 +64,27 @@
             border-radius: 10px;
         }
 
+        /* Länkstil */
+        a {
+            text-decoration: none; /* Tar bort understrykning */
+            color: #6fa3d9; /* Mjuk blå färg */
+            font-weight: bold; /* Fet stil */
+        }
+
+        a:hover {
+            color: #4a88b8; /* Mörkare blå vid hover */
+        }
+
+        .source a {
+            text-decoration: none;
+            color: #ffffff;
+            font-weight: bold;
+        }
+
+        .source a:hover {
+            text-decoration: underline;
+        }
+
         /* Klockstil */
         .clock {
             font-size: 1.2rem; /* Mindre klocktext */
@@ -79,13 +99,13 @@
     <div class="header">Välkommen till Lindbäcksstadion!</div>
     <div class="temperature-container">
         <div id="temperature" class="temperature">
-            <script type="text/javascript" src="https://www.temperatur.nu/jstemp.php?s=pitea-lindbacksstadion" onload="updateClock()"></script>
+            <script type="text/javascript" src="https://www.temperatur.nu/jstemp.php?s=pitea-lindbacksstadion"></script>
         </div>
         <div id="error-message" class="error"></div>
         <div id="clock" class="clock">Laddar tid...</div>
     </div>
     <div class="source">
-        Temperaturdata hämtad från Temperatur.nu
+        Temperaturdata hämtad från <a href="https://www.temperatur.nu" target="_blank">Temperatur.nu</a>
     </div>
 
     <script type="text/javascript">
