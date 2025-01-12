@@ -40,7 +40,7 @@
         .temperature {
             font-size: 14rem; /* Temperaturstorlek */
             font-weight: bold;
-            color: #7fb8b4; /* Huvudfärg på texten */
+            color: ##0000FF; /* Huvudfärg på texten */
             text-shadow: 
             1px 1px 2px #000000,  /* Smal svart skugga */
             2px 2px 4px #000000,  /* Tunnare glow */
@@ -64,20 +64,24 @@
             border-radius: 10px;
         }
 
-        /* Ta bort länkstil på temperatur */
-        #temperature {
+        /* Länkstil */
+        a {
             text-decoration: none; /* Tar bort understrykning */
-            color: inherit; /* Bevara färgen */
+            color: color; /* Mjuk blå färg */
+            font-weight: bold; /* Fet stil */
         }
 
-        /* Ta bort länkstil från "Temperatur.nu"-texten */
+        a:hover {
+            color: #4a88b8; /* Mörkare blå vid hover */
+        }
+
         .source a {
-            text-decoration: none; /* Tar bort understrykning */
-            color: #ffffff; /* Standard vit färg */
+            text-decoration: none;
+            color: #ffffff;
         }
 
         .source a:hover {
-            text-decoration: underline; /* Bara vid hover */
+            text-decoration: underline;
         }
 
         /* Klockstil */
@@ -155,6 +159,7 @@
 
         // Uppdatera temperaturen och färg efter att skriptet har laddats
         setInterval(updateTemperature, 1000); // Uppdaterar var 1 sekund för att fånga förändringar i temperatur
+
     </script>
 </body>
 </html>
