@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Välkommen till Lindbäcksstadion!</title>
     <style>
+        /* Anpassning för layout och 16:9-format */
         body {
             margin: 0;
             padding: 0;
@@ -14,22 +15,22 @@
             flex-direction: column;
             justify-content: space-between;
             align-items: center;
-            background: url('background.jpg') no-repeat center center fixed;
+            background: url('background.jpg') no-repeat center center fixed; /* Bakgrundsbild */
             background-size: cover;
             font-family: 'Arial', sans-serif;
-            color: #ffffff;
+            color: #ffffff; /* Vit text för kontrast */
             text-align: center;
         }
 
         .header {
             margin-top: 18px;
-            font-size: 3rem;
+            font-size: 3rem; /* Mindre rubrikstorlek */
             font-weight: bold;
-            text-shadow: 2px 2px 4px #000000;
+            text-shadow: 2px 2px 4px #000000; /* Minskat skuggeffekt */
         }
 
         .temperature-container {
-            flex: 1;
+            flex: 1; /* Tar upp centralt utrymme */
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -37,33 +38,35 @@
         }
 
         .temperature {
-            font-size: 14rem;
+            font-size: 14rem; /* Temperaturstorlek */
             font-weight: bold;
+            color: #7fb8b4; /* Huvudfärg på texten */
             text-shadow: 
-                1px 1px 2px #000000, 
-                2px 2px 4px #000000, 
-                -1px -1px 2px #000000;
+            1px 1px 2px #000000,  /* Smal svart skugga */
+            2px 2px 4px #000000,  /* Tunnare glow */
+            -1px -1px 2px #000000; /* Liten negativ skugga för balans */
             margin: 0;
         }
 
         .error {
-            font-size: 1.5rem;
+            font-size: 1.5rem; /* Mindre felmeddelande */
             color: #FF6347;
-            margin-top: 10px;
+            margin-top: 10px; /* Flytta upp nära temperaturen */
             text-shadow: 1px 1px 3px #000000;
         }
 
         .source {
-            font-size: 1rem;
+            font-size: 1rem; /* Mindre källa-text */
             margin-bottom: 20px;
             text-shadow: 1px 1px 3px #000000;
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(0, 0, 0, 0.5); /* Halvtransparent bakgrund */
             padding: 10px 20px;
             border-radius: 10px;
         }
 
+        /* Klockstil */
         .clock {
-            font-size: 1.2rem;
+            font-size: 1.2rem; /* Mindre klocktext */
             color: #FFFFFF;
             margin-top: 10px;
             font-weight: bold;
@@ -74,70 +77,31 @@
 <body>
     <div class="header">Välkommen till Lindbäcksstadion!</div>
     <div class="temperature-container">
-        <div id="temperature" class="temperature">Laddar...</div>
+        <div id="temperature" class="temperature">
+            <script type="text/javascript" src="https://www.temperatur.nu/jstemp.php?s=pitea-lindbacksstadion" onload="updateClock()"></script>
+        </div>
         <div id="error-message" class="error"></div>
         <div id="clock" class="clock">Laddar tid...</div>
     </div>
     <div class="source">
-        Temperaturdata hämtad från <a href="https://www.temperatur.nu" target="_blank">Temperatur.nu</a>
+        Temperaturdata hämtad från Temperatur.nu
     </div>
 
     <script type="text/javascript">
-        // Skript från ovan
-        async function fetchTemperature() {
-            const tempElement = document.getElementById("temperature");
-            const errorMessage = document.getElementById("error-message");
+        // Funktion för att uppdatera klockan
+        function updateClock() {
             const clockElement = document.getElementById("clock");
-
-            try {
-                const response = await fetch("http://www.temperatur.nu/termo/pitea-lindbacksstadion/temp.txt");
-
-                if (!response.ok) throw new Error(`Kunde inte hämta temperatur: ${response.status}`);
-                
-                const temperature = await response.text();
-                const tempValue = parseFloat(temperature.trim());
-
-                if (isNaN(tempValue)) {
-                    throw new Error("Ogiltigt temperaturvärde mottaget.");
-                }
-
-                tempElement.textContent = `${tempValue}°C`;
-
-                const now = new Date();
-                const hours = String(now.getHours()).padStart(2, '0');
-                const minutes = String(now.getMinutes()).padStart(2, '0');
-                clockElement.textContent = `Temperaturen senast uppdaterad kl. ${hours}:${minutes}`;
-
-                errorMessage.textContent = "";
-
-                updateTemperatureColor(tempValue);
-            } catch (error) {
-                errorMessage.textContent = "Kunde inte hämta temperaturen!";
-                console.error("Fel vid hämtning av temperatur:", error);
-            }
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            clockElement.textContent = `Senast uppdaterad kl. ${hours}:${minutes}`;
         }
 
-        function updateTemperatureColor(temp) {
-            const tempElement = document.getElementById("temperature");
+        // Uppdatera klockan omedelbart när sidan laddas
+        updateClock();
 
-            let color = "#7fb8b4";
-            if (temp > 1) {
-                color = "#d96f6f";
-            } else if (temp > -4) {
-                color = "#937fd9";
-            } else if (temp > -10) {
-                color = "#6f9ed9";
-            } else if (temp > -20) {
-                color = "#6fd985";
-            } else {
-                color = "#ffffff";
-            }
-
-            tempElement.style.color = color;
-        }
-
-        fetchTemperature();
-        setInterval(fetchTemperature, 180000);
+        // Uppdatera klockan varje minut
+        setInterval(updateClock, 60000); // 60000 ms = 1 minut
     </script>
 </body>
 </html>
