@@ -108,7 +108,9 @@
         function updateTemperatureFromScript() {
             const temperatureElement = document.getElementById("temperature");
             const tempText = temperatureElement.textContent;
-            const temperature = parseFloat(tempText);
+
+            // Extrahera temperaturen från den externa källan
+            const temperature = parseFloat(tempText.replace('°C', '').trim());
 
             if (!isNaN(temperature)) {
                 updateTemperature(temperature);
@@ -122,7 +124,7 @@
             const downArrow = document.getElementById("down-arrow");
 
             // Uppdatera temperaturtexten
-            temperatureElement.textContent = temperature.toFixed(1);
+            temperatureElement.textContent = temperature.toFixed(1) + "°C";
 
             // Kontrollera om temperaturen har förändrats och uppdatera pilarna
             if (previousTemperature !== null) {
