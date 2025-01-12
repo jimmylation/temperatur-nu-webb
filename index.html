@@ -38,14 +38,14 @@
         }
 
         .temperature {
-            font-size: 14rem; /* Stor temperatur */
+            font-size: 14rem; /* Temperaturstorlek */
             font-weight: bold;
+            color: #7fb8b4; /* Huvudfärg på texten */
             text-shadow: 
-                1px 1px 2px #000000, 
-                2px 2px 4px #000000, 
-                -1px -1px 2px #000000; /* Glow för texten */
+            1px 1px 2px #000000,  /* Smal svart skugga */
+            2px 2px 4px #000000,  /* Tunnare glow */
+            -1px -1px 2px #000000; /* Liten negativ skugga för balans */
             margin: 0;
-            transition: color 0.5s ease; /* Mjuk övergång vid färgbyte */
         }
 
         .error {
@@ -64,6 +64,17 @@
             border-radius: 10px;
         }
 
+        /* Länkstil */
+        a {
+            text-decoration: none; /* Tar bort understrykning */
+            color: #6fa3d9; /* Mjuk blå färg */
+            font-weight: bold; /* Fet stil */
+        }
+
+        a:hover {
+            color: #4a88b8; /* Mörkare blå vid hover */
+        }
+
         .source a {
             text-decoration: none;
             color: #ffffff;
@@ -73,61 +84,77 @@
         .source a:hover {
             text-decoration: underline;
         }
+
+        /* Klockstil */
+        .clock {
+            font-size: 1.2rem; /* Mindre klocktext */
+            color: #FFFFFF;
+            margin-top: 10px;
+            font-weight: bold;
+            text-shadow: 1px 1px 3px #000000;
+        }
     </style>
 </head>
 <body>
     <div class="header">Välkommen till Lindbäcksstadion!</div>
     <div class="temperature-container">
-        <div id="temperature" class="temperature">Laddar...</div>
+        <div id="temperature" class="temperature">
+            <script type="text/javascript" src="https://www.temperatur.nu/jstemp.php?s=pitea-lindbacksstadion"></script>
+        </div>
         <div id="error-message" class="error"></div>
+        <div id="clock" class="clock">Laddar tid...</div>
     </div>
     <div class="source">
-        Temperaturdata hämtat från <a href="https://www.temperatur.nu" target="_blank">Temperatur.nu</a>.
+        Temperaturdata hämtad från <a href="https://www.temperatur.nu" target="_blank">Temperatur.nu</a>
     </div>
 
-    <script>
-        async function fetchTemperature() {
-            const temperatureElement = document.getElementById("temperature");
-            const errorMessageElement = document.getElementById("error-message");
-            const url = "http://www.temperatur.nu/termo/pitea-lindbacksstadion/temp.txt";
+    <script type="text/javascript">
+        // Funktion för att uppdatera klockan
+        function updateClock() {
+            const clockElement = document.getElementById("clock");
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            clockElement.textContent = `Senast uppdaterad kl. ${hours}:${minutes}`;
+        }
 
-            try {
-                const response = await fetch(url);
-                if (!response.ok) throw new Error(`Kunde inte hämta temperaturdata: ${response.status}`);
-                
-                const temperatureText = await response.text();
-                const temperature = parseFloat(temperatureText.trim()); // Läs och omvandla temperaturen till ett tal
+        // Uppdatera klockan omedelbart när sidan laddas
+        updateClock();
 
-                // Ange färg baserat på intervall
-                let color = "#7fb8b4"; // Standardfärg
-                if (temperature > 1) {
+        // Uppdatera klockan varje minut
+        setInterval(updateClock, 60000); // 60000 ms = 1 minut
+
+        // Funktion för att ändra temperaturfärg
+        function updateTemperatureColor() {
+            const tempElement = document.getElementById("temperature");
+            const tempText = tempElement.textContent;
+
+            // Försök att omvandla temperaturen till ett tal
+            const temp = parseFloat(tempText);
+
+            // Ange färg baserat på intervall
+            let color = "#7fb8b4"; // Standardfärg
+            if (!isNaN(temp)) {
+                if (temp > 1) {
                     color = "#d96f6f"; // Rött (varmt)
-                } else if (temperature > -4) {
+                } else if (temp > -4) {
                     color = "#937fd9"; // Violett (svalt)
-                } else if (temperature > -10) {
+                } else if (temp > -10) {
                     color = "#7f93d9"; // Blått (kallt)
-                } else if (temperature > -20) {
+                } else if (temp > -20) {
                     color = "#7fd98c"; // Grönt (mycket kallt)
                 } else {
                     color = "#ffffff"; // Vitt (extremt kallt)
                 }
-
-                // Uppdatera temperaturens text och stil
-                temperatureElement.textContent = `${temperature.toFixed(1)}°C`;
-                temperatureElement.style.color = color;
-                errorMessageElement.textContent = ""; // Rensa eventuella felmeddelanden
-            } catch (error) {
-                // Hantera fel: visa ett standardvärde och meddela användaren
-                temperatureElement.textContent = "x.x°C";
-                temperatureElement.style.color = "#7fb8b4"; // Standardfärg
-                errorMessageElement.textContent = "Kunde inte hämta temperaturen just nu.";
-                console.error("Error fetching temperature data:", error);
+                tempElement.style.color = color;
             }
         }
 
-        // Uppdatera temperatur varje 3 minuter
-        fetchTemperature();
-        setInterval(fetchTemperature, 180000); // 180000 ms = 3 minuter
+        // Uppdatera temperaturfärg direkt efter sidan laddas
+        updateTemperatureColor();
+
+        // Kontrollera och uppdatera färgen var 10 sekund
+        setInterval(updateTemperatureColor, 10000);
     </script>
 </body>
 </html>
