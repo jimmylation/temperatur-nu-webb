@@ -35,17 +35,38 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
+            position: relative; /* För att positionera pilarna relativt denna container */
         }
 
         .temperature {
             font-size: 14rem; /* Temperaturstorlek */
             font-weight: bold;
-            color: ##0000FF; /* Huvudfärg på texten */
+            color: #0000FF; /* Huvudfärg på texten */
             text-shadow: 
             1px 1px 2px #000000,  /* Smal svart skugga */
             2px 2px 4px #000000,  /* Tunnare glow */
             -1px -1px 2px #000000; /* Liten negativ skugga för balans */
             margin: 0;
+        }
+
+        .arrow {
+            position: absolute;
+            font-size: 5rem; /* Storlek på pilen */
+            color: white; /* Färg på pilen */
+            visibility: hidden; /* Döljer pilen initialt */
+            transition: visibility 0.3s ease-in-out; /* Gör att pilen visas snyggt */
+        }
+
+        .arrow.up {
+            top: 0; /* Positionera pilen för att vara bakom temperaturtexten */
+            left: 50%; 
+            transform: translateX(-50%) translateY(-80px); /* Centrerad och lite ovanför texten */
+        }
+
+        .arrow.down {
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%) translateY(80px); /* Centrerad och lite under temperaturtexten */
         }
 
         .error {
@@ -100,6 +121,10 @@
         <div id="temperature" class="temperature">
             <script type="text/javascript" src="https://www.temperatur.nu/jstemp.php?s=pitea-lindbacksstadion"></script>
         </div>
+        <!-- Röd pil upp (Visa när temperaturen har stigit) -->
+        <div id="arrow-up" class="arrow up">&#8593;</div>
+        <!-- Blå pil ner (Visa när temperaturen har sjunkit) -->
+        <div id="arrow-down" class="arrow down">&#8595;</div>
         <div id="error-message" class="error"></div>
         <div id="clock" class="clock">Laddar tid...</div>
     </div>
@@ -108,6 +133,8 @@
     </div>
 
     <script type="text/javascript">
+        let lastTemperature = null; // Variabel för att hålla reda på senaste temperatur
+
         // Funktion för att uppdatera klockan
         function updateClock() {
             const clockElement = document.getElementById("clock");
@@ -145,21 +172,43 @@
 
         // Funktion som uppdaterar temperatur och kallar på updateTemperatureColor
         function updateTemperature() {
-            const temperatureElement = document.getElementById("a");
+            const temperatureElement = document.getElementById("temperature");
             
             // Vi behöver extrahera temperaturen från den externa script-taggen.
-            const temperatureText = temperatureElement.textContent;
+            const temperatureText = temperatureElement.textContent.trim();
 
             // Om temperaturtexten innehåller ett nummer, analysera det
             const temperature = parseFloat(temperatureText);
             if (!isNaN(temperature)) {
                 updateTemperatureColor(temperature);
+
+                // Hantera pilen för temperaturökning eller minskning
+                const arrowUp = document.getElementById("arrow-up");
+                const arrowDown = document.getElementById("arrow-down");
+
+                if (lastTemperature !== null) {
+                    if (temperature > lastTemperature) {
+                        // Om temperaturen har ökat
+                        arrowUp.style.visibility = 'visible'; // Visa upp-pilen
+                        arrowDown.style.visibility = 'hidden'; // Dölj ner-pilen
+                    } else if (temperature < lastTemperature) {
+                        // Om temperaturen har minskat
+                        arrowDown.style.visibility = 'visible'; // Visa ner-pilen
+                        arrowUp.style.visibility = 'hidden'; // Dölj upp-pilen
+                    } else {
+                        // Om temperaturen inte har förändrats
+                        arrowUp.style.visibility = 'hidden';
+                        arrowDown.style.visibility = 'hidden';
+                    }
+                }
+
+                // Spara nuvarande temperatur som förra temperaturvärde för nästa jämförelse
+                lastTemperature = temperature;
             }
         }
 
-        // Uppdatera temperaturen och färg efter att skriptet har laddats
-        setInterval(updateTemperature, 1000); // Uppdaterar var 1 sekund för att fånga förändringar i temperatur
-
+        // Uppdatera temperaturen och färg var 1 sekund
+        setInterval(updateTemperature, 1000); // Uppdaterar varje sekund för att fånga temperaturförändringar
     </script>
 </body>
 </html>
