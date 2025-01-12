@@ -98,7 +98,7 @@
         .up-arrow, .down-arrow {
             font-size: 3rem;
             position: absolute;
-            top: -50px;
+            top: -70px;
             transition: opacity 0.5s ease;
         }
 
@@ -111,7 +111,7 @@
         }
 
         .hidden {
-            opacity: 0;
+            display: none;
         }
 
     </style>
@@ -119,9 +119,7 @@
 <body>
     <div class="header">Välkommen till Lindbäcksstadion!</div>
     <div class="temperature-container">
-        <div id="temperature" class="temperature">
-            <script type="text/javascript" src="https://www.temperatur.nu/jstemp.php?s=pitea-lindbacksstadion"></script>
-        </div>
+        <div id="temperature" class="temperature">10</div> <!-- Temporär temperaturtext för test -->
         <div id="error-message" class="error"></div>
         <div id="clock" class="clock">Laddar tid...</div>
         <!-- Pilerna som kommer att visas -->
@@ -155,11 +153,9 @@
         function updateTemperature() {
             const temperatureElement = document.getElementById("temperature");
 
-            // Extrahera temperaturen från skriptet (den externa temperaturkällan)
-            const temperatureText = temperatureElement.textContent;
-
-            // Om temperaturen är ett nummer, fortsätt
-            const temperature = parseFloat(temperatureText);
+            // Temporär temperatur (kan tas bort när riktiga data är tillgängliga)
+            const temperature = parseFloat(temperatureElement.textContent);
+            
             if (!isNaN(temperature)) {
                 let upArrow = document.getElementById("up-arrow");
                 let downArrow = document.getElementById("down-arrow");
@@ -176,6 +172,13 @@
                         upArrow.classList.add("hidden");
                         downArrow.classList.remove("hidden");
                         lastChangeDirection = "down";
+                    } else {
+                        // Temperaturen är samma
+                        if (lastChangeDirection === "up") {
+                            upArrow.classList.remove("hidden");
+                        } else if (lastChangeDirection === "down") {
+                            downArrow.classList.remove("hidden");
+                        }
                     }
                 }
                 
@@ -186,7 +189,6 @@
 
         // Uppdatera temperaturen varje sekund
         setInterval(updateTemperature, 1000); // Uppdaterar var 1 sekund för att fånga förändringar i temperatur
-
     </script>
 </body>
 </html>
