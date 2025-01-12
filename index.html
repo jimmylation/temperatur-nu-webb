@@ -38,36 +38,15 @@
         }
 
         .temperature {
-            font-size: 14rem; /* Temperaturstorlek */
-            font-weight: bold;
-            color: #7fb8b4; /* Huvudfärg på text */
-            text-shadow: 
-                0 0 20px #7fb8b4, /* Yttre glow */
-                0 0 40px #7fb8b4, 
-                0 0 60px #7fb8b4, 
-                0 0 80px #5f9ea0; /* Svagare ytterkanter */
-            margin: 0;
-            animation: steady-glow 2s infinite alternate; /* Subtil glow-animation */
-        }
-        
-        /* Ny animation för jämn glow */
-        @keyframes steady-glow {
-            0% {
-                text-shadow: 
-                    0 0 20px #7fb8b4,
-                    0 0 40px #7fb8b4,
-                    0 0 60px #7fb8b4,
-                    0 0 80px #5f9ea0;
-            }
-            100% {
-                text-shadow: 
-                    0 0 30px #7fb8b4,
-                    0 0 50px #7fb8b4,
-                    0 0 70px #7fb8b4,
-                    0 0 90px #5f9ea0;
-            }
-        }
-
+    font-size: 14rem; /* Temperaturstorlek */
+    font-weight: bold;
+    color: #7fb8b4; /* Huvudfärg på texten */
+    text-shadow: 
+        1px 1px 2px #000000,  /* Smal svart skugga */
+        2px 2px 4px #000000,  /* Tunnare glow */
+        -1px -1px 2px #000000; /* Liten negativ skugga för balans */
+    margin: 0;
+}
 
         .error {
             font-size: 1.5rem; /* Mindre felmeddelande */
