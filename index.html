@@ -70,7 +70,7 @@
         }
 
         .up-arrow, .down-arrow {
-            font-size: 7rem; /* Mindre pilstorlek för att centrera bättre */
+            font-size: 7rem;
             font-weight: bold;
             margin-left: 3rem;
             transition: opacity 0.5s ease;
@@ -94,7 +94,7 @@
 <body>
     <div class="header">Välkommen till Lindbäcksstadion!</div>
     <div class="temperature-container">
-        <div id="temperature" class="temperature">10</div> <!-- Temporär temperaturtext för test -->
+        <div id="temperature" class="temperature">0</div>
         <div id="up-arrow" class="up-arrow hidden">↑</div>
         <div id="down-arrow" class="down-arrow hidden">↓</div>
     </div>
@@ -106,19 +106,33 @@
         let previousTemperature = null;
         let lastChangeDirection = null;
 
-        function getTemperature() {
-            const temperature = Math.random() * 20 - 10;  // Simulerar temperatur mellan -10 och 10 grader
-            return temperature;
+        // Funktion för att hämta temperaturen från den externa källan
+        function fetchTemperature() {
+            // Skapa en ny script-tag för att hämta temperaturvärdet via den externa källan
+            const script = document.createElement('script');
+            script.src = 'https://www.temperatur.nu/jstemp.php?s=pitea-lindbacksstadion';
+            document.head.appendChild(script);
+
+            // Den externa källan kommer att tilldela ett globala variabelvärde, så vi måste använda den här:
+            script.onload = function() {
+                if (typeof temperature !== 'undefined') {
+                    updateTemperature(temperature);
+                } else {
+                    console.error('Temperaturvärdet är inte tillgängligt!');
+                }
+            };
         }
 
-        function updateTemperature() {
+        // Uppdatera temperatur och pilernas synlighet
+        function updateTemperature(temperature) {
             const temperatureElement = document.getElementById("temperature");
             const upArrow = document.getElementById("up-arrow");
             const downArrow = document.getElementById("down-arrow");
 
-            const temperature = getTemperature();
+            // Uppdatera temperaturtexten
             temperatureElement.textContent = temperature.toFixed(1);
 
+            // Kontrollera om temperaturen har förändrats och uppdatera pilarna
             if (previousTemperature !== null) {
                 if (temperature > previousTemperature) {
                     upArrow.classList.remove("hidden");
@@ -138,9 +152,33 @@
             }
 
             previousTemperature = temperature;
+
+            // Uppdatera färgen beroende på temperatur
+            updateTemperatureColor(temperature);
         }
 
-        setInterval(updateTemperature, 5000); // Uppdatera temperaturen och pilen varje 5:e sekund
+        // Funktion för att uppdatera färgen baserat på temperaturen
+        function updateTemperatureColor(temperature) {
+            const temperatureElement = document.getElementById("temperature");
+
+            let color;
+            if (temperature > 1) {
+                color = 'rgb(255, 0, 0)'; // Röd
+            } else if (temperature >= -4 && temperature <= 1) {
+                color = 'rgb(148, 0, 211)'; // Violett
+            } else if (temperature >= -10 && temperature < -4) {
+                color = 'rgb(0, 0, 255)'; // Blå
+            } else if (temperature >= -20 && temperature < -10) {
+                color = 'rgb(0, 255, 0)'; // Grön
+            } else {
+                color = 'rgb(255, 255, 255)'; // Vit
+            }
+
+            temperatureElement.style.color = color;
+        }
+
+        // Hämtar temperatur från den externa källan var 10:e sekund
+        setInterval(fetchTemperature, 10000);
     </script>
 </body>
 </html>
