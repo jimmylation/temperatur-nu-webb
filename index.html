@@ -40,7 +40,7 @@
         .temperature {
             font-size: 14rem; /* Temperaturstorlek */
             font-weight: bold;
-            color: inherit;  /* Här ser vi till att det inte är någon default färg */
+            color: ##0000FF; /* Huvudfärg på texten */
             text-shadow: 
             1px 1px 2px #000000,  /* Smal svart skugga */
             2px 2px 4px #000000,  /* Tunnare glow */
@@ -64,7 +64,25 @@
             border-radius: 10px;
         }
 
+        /* Länkstil */
+        a {
+            text-decoration: none; /* Tar bort understrykning */
+            color: rgb(255, 255, 255); /* Mjuk blå färg */
+            font-weight: bold; /* Fet stil */
+        }
 
+        a:hover {
+            color: #4a88b8; /* Mörkare blå vid hover */
+        }
+
+        .source a {
+            text-decoration: none;
+            color: #ffffff;
+        }
+
+        .source a:hover {
+            text-decoration: underline;
+        }
 
         /* Klockstil */
         .clock {
@@ -96,7 +114,7 @@
             const now = new Date();
             const hours = String(now.getHours()).padStart(2, '0');
             const minutes = String(now.getMinutes()).padStart(2, '0');
-            clockElement.textContent = Senast uppdaterad kl. ${hours}:${minutes};
+            clockElement.textContent = `Senast uppdaterad kl. ${hours}:${minutes}`;
         }
 
         // Uppdatera klockan omedelbart när sidan laddas
@@ -107,7 +125,7 @@
 
         // Funktion för att uppdatera temperaturens färg
         function updateTemperatureColor(temperature) {
-            const temperatureElement = document.getElementById("a");
+            const temperatureElement = document.getElementById("temperature");
 
             let color;
             if (temperature > 1) {
@@ -127,7 +145,7 @@
 
         // Funktion som uppdaterar temperatur och kallar på updateTemperatureColor
         function updateTemperature() {
-            const temperatureElement = document.getElementById("a");
+            const temperatureElement = document.getElementById("temperature");
             
             // Vi behöver extrahera temperaturen från den externa script-taggen.
             const temperatureText = temperatureElement.textContent;
