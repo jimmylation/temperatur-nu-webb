@@ -31,7 +31,7 @@
         .temperature-container {
             flex: 1;
             display: flex;
-            flex-direction: column;
+            flex-direction: row; /* Ändrat till row så att pilen kommer bredvid */
             justify-content: center;
             align-items: center;
             position: relative;
@@ -71,8 +71,7 @@
 
         .up-arrow, .down-arrow {
             font-size: 3rem;
-            position: absolute;
-            top: -70px;
+            margin-left: 20px; /* Placera pilen till höger om temperaturen */
             transition: opacity 0.5s ease;
         }
 
@@ -94,9 +93,6 @@
     <div class="header">Välkommen till Lindbäcksstadion!</div>
     <div class="temperature-container">
         <div id="temperature" class="temperature">10</div> <!-- Temporär temperaturtext för test -->
-        <div id="error-message" class="error"></div>
-        <div id="clock" class="clock">Laddar tid...</div>
-
         <div id="up-arrow" class="up-arrow hidden">↑</div>
         <div id="down-arrow" class="down-arrow hidden">↓</div>
     </div>
