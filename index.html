@@ -31,7 +31,7 @@
         .temperature-container {
             flex: 1;
             display: flex;
-            flex-direction: row; /* Row så pilen kommer bredvid */
+            flex-direction: row;
             justify-content: center;
             align-items: center;
             position: relative;
@@ -70,11 +70,11 @@
         }
 
         .up-arrow, .down-arrow {
-            font-size: 14rem; /* Större pil */
-            font-weight: bold; /* Fetstil */
-            margin-left: 3rem; /* Större avstånd mellan pil och temperatur */
+            font-size: 7rem; /* Mindre pilstorlek för att centrera bättre */
+            font-weight: bold;
+            margin-left: 3rem;
             transition: opacity 0.5s ease;
-            text-shadow: 1px 1px 2px #000000, 2px 2px 4px #000000, -1px -1px 2px #000000; /* Samma glow som temperaturtext */
+            text-shadow: 1px 1px 2px #000000, 2px 2px 4px #000000, -1px -1px 2px #000000;
         }
 
         .up-arrow {
@@ -106,36 +106,29 @@
         let previousTemperature = null;
         let lastChangeDirection = null;
 
-        // Simulerad temperaturfunktion (det här är den del som i verkligheten skulle hämta temperatur från API)
         function getTemperature() {
-            // Här kan du testa att uppdatera temperaturer, eller använd en riktig API
             const temperature = Math.random() * 20 - 10;  // Simulerar temperatur mellan -10 och 10 grader
             return temperature;
         }
 
-        // Funktion för att uppdatera temperaturen och pilens riktning
         function updateTemperature() {
             const temperatureElement = document.getElementById("temperature");
             const upArrow = document.getElementById("up-arrow");
             const downArrow = document.getElementById("down-arrow");
 
-            // Hämta temperatur
             const temperature = getTemperature();
-            temperatureElement.textContent = temperature.toFixed(1); // Uppdatera texten på skärmen
+            temperatureElement.textContent = temperature.toFixed(1);
 
             if (previousTemperature !== null) {
                 if (temperature > previousTemperature) {
-                    // Om temperaturen har ökat
                     upArrow.classList.remove("hidden");
                     downArrow.classList.add("hidden");
                     lastChangeDirection = "up";
                 } else if (temperature < previousTemperature) {
-                    // Om temperaturen har minskat
                     upArrow.classList.add("hidden");
                     downArrow.classList.remove("hidden");
                     lastChangeDirection = "down";
                 } else {
-                    // Temperaturen är samma som tidigare
                     if (lastChangeDirection === "up") {
                         upArrow.classList.remove("hidden");
                     } else if (lastChangeDirection === "down") {
@@ -144,11 +137,9 @@
                 }
             }
 
-            // Uppdatera föregående temperatur för nästa gång
             previousTemperature = temperature;
         }
 
-        // Uppdatera temperaturen var 5:e sekund för test
         setInterval(updateTemperature, 5000); // Uppdatera temperaturen och pilen varje 5:e sekund
     </script>
 </body>
