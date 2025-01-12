@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Välkommen till Lindbäcksstadion!</title>
     <style>
+        /* Anpassning för layout och 16:9-format */
         body {
             margin: 0;
             padding: 0;
@@ -14,55 +15,78 @@
             flex-direction: column;
             justify-content: space-between;
             align-items: center;
-            background: url('background.jpg') no-repeat center center fixed;
+            background: url('background.jpg') no-repeat center center fixed; /* Bakgrundsbild */
             background-size: cover;
             font-family: 'Arial', sans-serif;
-            color: #ffffff;
+            color: #ffffff; /* Vit text för kontrast */
             text-align: center;
         }
 
         .header {
             margin-top: 18px;
-            font-size: 3rem;
+            font-size: 3rem; /* Mindre rubrikstorlek */
             font-weight: bold;
-            text-shadow: 2px 2px 4px #000000;
+            text-shadow: 2px 2px 4px #000000; /* Minskat skuggeffekt */
         }
 
-        .temp-text {
-            font-size: 5rem; /* Större text för att testa */
+        .temperature-container {
+            flex: 1; /* Tar upp centralt utrymme */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .temperature {
+            font-size: 14rem; /* Temperaturstorlek */
             font-weight: bold;
-            color: inherit;
-            text-shadow: 1px 1px 2px #000000, 2px 2px 4px #000000, -1px -1px 2px #000000;
-            margin: 20px;
+            color: inherit;  /* Här ser vi till att det inte är någon default färg */
+            text-shadow: 
+            1px 1px 2px #000000,  /* Smal svart skugga */
+            2px 2px 4px #000000,  /* Tunnare glow */
+            -1px -1px 2px #000000; /* Liten negativ skugga för balans */
+            margin: 0;
         }
 
         .error {
-            font-size: 1.5rem;
+            font-size: 1.5rem; /* Mindre felmeddelande */
             color: #FF6347;
-            margin-top: 10px;
+            margin-top: 10px; /* Flytta upp nära temperaturen */
             text-shadow: 1px 1px 3px #000000;
         }
 
         .source {
-            font-size: 1rem;
+            font-size: 1rem; /* Mindre källa-text */
             margin-bottom: 20px;
             text-shadow: 1px 1px 3px #000000;
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(0, 0, 0, 0.5); /* Halvtransparent bakgrund */
             padding: 10px 20px;
             border-radius: 10px;
         }
 
+        /* Länkstil */
         a {
-            text-decoration: none;
-            font-weight: bold;
+            text-decoration: none; /* Tar bort understrykning */
+            font-weight: bold; /* Fet stil */
+            color: inherit;  /* Här ser vi till att det inte är någon default färg */
         }
 
         a:hover {
-            color: #4a88b8;
+            color: #4a88b8; /* Mörkare blå vid hover */
         }
 
+        .source a {
+            text-decoration: none;
+            color: #ffffff;
+        }
+
+        .source a:hover {
+            text-decoration: underline;
+        }
+
+        /* Klockstil */
         .clock {
-            font-size: 1.2rem;
+            font-size: 1.2rem; /* Mindre klocktext */
             color: #FFFFFF;
             margin-top: 10px;
             font-weight: bold;
@@ -72,47 +96,70 @@
 </head>
 <body>
     <div class="header">Välkommen till Lindbäcksstadion!</div>
-    <div class="temp-text" id="temp-text">123</div>
-    <div id="error-message" class="error"></div>
-    <div id="clock" class="clock">Laddar tid...</div>
+    <div class="temperature-container">
+        <div id="temperature" class="temperature">
+            <script type="text/javascript" src="https://www.temperatur.nu/jstemp.php?s=pitea-lindbacksstadion"></script>
+        </div>
+        <div id="error-message" class="error"></div>
+        <div id="clock" class="clock">Laddar tid...</div>
+    </div>
     <div class="source">
         Temperaturdata hämtad från <a href="https://www.temperatur.nu" target="_blank">Temperatur.nu</a>
     </div>
 
     <script type="text/javascript">
-        // Funktion för att uppdatera färgen på texten
-        function updateTextColor(value) {
-            const textElement = document.getElementById("temp-text");
+        // Funktion för att uppdatera klockan
+        function updateClock() {
+            const clockElement = document.getElementById("clock");
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            clockElement.textContent = Senast uppdaterad kl. ${hours}:${minutes};
+        }
+
+        // Uppdatera klockan omedelbart när sidan laddas
+        updateClock();
+
+        // Uppdatera klockan varje minut
+        setInterval(updateClock, 60000); // 60000 ms = 1 minut
+
+        // Funktion för att uppdatera temperaturens färg
+        function updateTemperatureColor(temperature) {
+            const temperatureElement = document.getElementById("a");
 
             let color;
-            if (value > 1) {
+            if (temperature > 1) {
                 color = 'rgb(255, 0, 0)'; // Röd
-            } else if (value >= -4 && value <= 1) {
+            } else if (temperature >= -4 && temperature <= 1) {
                 color = 'rgb(148, 0, 211)'; // Violett
-            } else if (value >= -10 && value < -4) {
+            } else if (temperature >= -10 && temperature < -4) {
                 color = 'rgb(0, 0, 255)'; // Blå
-            } else if (value >= -20 && value < -10) {
+            } else if (temperature >= -20 && temperature < -10) {
                 color = 'rgb(0, 255, 0)'; // Grön
             } else {
                 color = 'rgb(255, 255, 255)'; // Vit
             }
 
-            textElement.style.color = color;
+            temperatureElement.style.color = color;
         }
 
-        // Funktion för att testa uppdateringen
-        function testUpdate() {
-            const randomValue = Math.floor(Math.random() * 41) - 20; // Generera ett värde mellan -20 och 20
-            updateTextColor(randomValue); // Uppdatera färgen baserat på värdet
+        // Funktion som uppdaterar temperatur och kallar på updateTemperatureColor
+        function updateTemperature() {
+            const temperatureElement = document.getElementById("a");
+            
+            // Vi behöver extrahera temperaturen från den externa script-taggen.
+            const temperatureText = temperatureElement.textContent;
+
+            // Om temperaturtexten innehåller ett nummer, analysera det
+            const temperature = parseFloat(temperatureText);
+            if (!isNaN(temperature)) {
+                updateTemperatureColor(temperature);
+            }
         }
 
-        // Testa uppdateringen direkt vid sidladdning
-        window.onload = function() {
-            testUpdate(); // Initial färg när sidan laddas
-        };
+        // Uppdatera temperaturen och färg efter att skriptet har laddats
+        setInterval(updateTemperature, 1000); // Uppdaterar var 1 sekund för att fånga förändringar i temperatur
 
-        // Uppdatera var 2 sekund för att se färgväxling
-        setInterval(testUpdate, 2000);
     </script>
 </body>
 </html>
