@@ -42,10 +42,7 @@
             font-weight: bold;
             /* color: ##000099; /* Huvudfärg på texten */
             color: #FFA500; /* Ljusare blå färg #3366FF */
-            text-shadow: 
-            /* 1px 1px 2px #000000,   Smal svart skugga */
-            /* 2px 2px 4px #000000,   Tunnare glow */
-            /* -1px -1px 2px #000000;  Liten negativ skugga för balans */
+            text-shadow:
                 2px 2px 4px #000000,  /* Förstärkt svart skugga */
                 4px 4px 8px #000000,  /* Större glow */
                 -2px -2px 4px #000000; /* Balanserande skugga */
@@ -122,6 +119,53 @@
             const minutes = String(now.getMinutes()).padStart(2, '0');
             clockElement.textContent = `Senast uppdaterad kl. ${hours}:${minutes}`;
         }
+
+        // ====== Dynamisk färg på temperaturtext (från zip-filens logik) ======
+        function getTemperatureColor(temperature) {
+            if (temperature > 1) {
+                return "#FF6666";  // Röd
+            } else if (1 >= temperature && temperature >= -4) {
+                return "#AC64E9";  // Violett
+            } else if (-4 > temperature && temperature >= -10) {
+                return "#6666FF";  // Blå
+            } else if (-10 > temperature && temperature >= -20) {
+                return "#57D957";  // Grön
+            } else {
+                return "#FFFFFF";  // Vit
+            }
+        }
+
+        function extractTemperatureValue(text) {
+            const match = (text || "").match(/-?\d+(?:[.,]\d+)?/);
+            if (!match) return null;
+            return parseFloat(match[0].replace(",", "."));
+        }
+
+        function applyTemperatureColor() {
+            const tempContainer = document.getElementById("temperature");
+            if (!tempContainer) return false;
+
+            const tempValue = extractTemperatureValue(tempContainer.textContent);
+            if (tempValue === null || Number.isNaN(tempValue)) return false;
+
+            const color = getTemperatureColor(tempValue);
+
+            // Sätt färg på allt som temperatur-scriptet eventuellt lagt in (t.ex. <a>, <span>)
+            tempContainer.style.color = color;
+            tempContainer.querySelectorAll("*").forEach(el => {
+                el.style.color = color;
+            });
+
+            return true;
+        }
+
+        // Pollar en kort stund tills temperatur.nu hunnit skriva ut värdet
+        (function pollForTemperature(attempt) {
+            if (applyTemperatureColor()) return;
+            if (attempt >= 40) return; // ~10 sek (40 * 250ms)
+            setTimeout(() => pollForTemperature(attempt + 1), 250);
+        })(0);
+        // ================================================================
 
         // Uppdatera klockan omedelbart när sidan laddas
         updateClock();
